@@ -8,11 +8,13 @@
     public class LanguageVisitor : LanguageBaseVisitor<string>
     {
         private readonly Context _context;
+        private readonly bool _debug;
         private readonly List<IVariableProvider> _providers;
 
-        public LanguageVisitor(List<IVariableProvider> providers, Context context)
+        public LanguageVisitor(List<IVariableProvider> providers, Context context, bool debug = false)
         {
             _context = context;
+            _debug = debug; // this is really not okay.
             _providers = providers.ToList();
         }
 
@@ -35,7 +37,7 @@
 
         public override string VisitMyvar2(LanguageParser.Myvar2Context context)
         {
-            return $"[{InnerVisitMyvar2(context)}]";
+            return _debug ? $"[{InnerVisitMyvar2(context)}]" : InnerVisitMyvar2(context);
         }
 
         private string InnerVisitStatic(LanguageParser.StaticContext context)
@@ -45,7 +47,7 @@
 
         public override string VisitStatic(LanguageParser.StaticContext context)
         {
-            return $"[{InnerVisitStatic(context)}]";
+            return _debug ? $"[{InnerVisitStatic(context)}]" : InnerVisitStatic(context);
         }
 
         protected override string AggregateResult(string aggregate, string nextResult)

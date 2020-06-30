@@ -102,7 +102,7 @@
             var ctx = new Context(
                                   new DateTime(2020, 12, 1, 15, 22, 23),
                                   @"D:\aap\beer\cobra\File 234 Final.docx");
-            var visitor = new LanguageVisitor(_providers, ctx);
+            var visitor = new LanguageVisitor(_providers, ctx, true);
 
             // act
             var context = GetExpressionContext(input);
