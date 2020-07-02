@@ -18,15 +18,14 @@
             _providers = providers.ToList();
         }
 
-        public string InnerVisitMyvar2(LanguageParser.Myvar2Context context)
+        public string InnerVisitVariable(LanguageParser.VariableContext context)
         {
-            string key = context.AB(0).GetText();
+            var key = context.KEY().GetText();
             string args = null;
 
-            if (context.SEP() != null)
-            {
-                args = context.AB(1).GetText();
-            }
+            var contextArg = context.arg;
+            if (contextArg != null)
+                args = contextArg.GetText();
 
             var selectedProvider = _providers.FirstOrDefault(p => p.CanProvide(key));
             if (selectedProvider == null)
@@ -35,19 +34,19 @@
             return selectedProvider.Provide(_context, key, args);
         }
 
-        public override string VisitMyvar2(LanguageParser.Myvar2Context context)
+        public override string VisitVariable(LanguageParser.VariableContext context)
         {
-            return _debug ? $"[{InnerVisitMyvar2(context)}]" : InnerVisitMyvar2(context);
+            return _debug ? $"[{InnerVisitVariable(context)}]" : InnerVisitVariable(context);
         }
 
-        private string InnerVisitStatic(LanguageParser.StaticContext context)
+        private string InnerVisitText(LanguageParser.TextContext context)
         {
-            return context.NAME().GetText();
+            return context.GetText();
         }
 
-        public override string VisitStatic(LanguageParser.StaticContext context)
+        public override string VisitText(LanguageParser.TextContext context)
         {
-            return _debug ? $"[{InnerVisitStatic(context)}]" : InnerVisitStatic(context);
+            return _debug ? $"[{InnerVisitText(context)}]" : InnerVisitText(context);
         }
 
         protected override string AggregateResult(string aggregate, string nextResult)

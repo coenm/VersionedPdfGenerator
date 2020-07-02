@@ -12,9 +12,11 @@
     using Core.VariableProviders.FileInfo;
     using Core.VariableProviders.GitVersion;
     using Xunit;
+    using Xunit.Abstractions;
 
     public class IntegrationTests
     {
+        private readonly ITestOutputHelper _output;
         private readonly List<IVariableProvider> _providers;
 
         private const string JSON_CONTENT = @"
@@ -52,8 +54,9 @@
 }
 ";
 
-        public IntegrationTests()
+        public IntegrationTests(ITestOutputHelper  output)
         {
+            _output = output;
             var dateTimeFormatter = new ConfigurableDateTimeFormatter(
                                                                       "yyyy-M-d HH.mm.ss",
                                                                       "yyyy-M-d",
@@ -96,6 +99,14 @@
             "{filenamebase}_v{GitVersion.MajorMinorPatch}.pdf ",
             "[File 234 Final][_v][0.1.0][.pdf ]")]
 
+        [InlineData("Fixed ",                "[Fixed ]")]
+        [InlineData(" Fixed",                "[ Fixed]")]
+        [InlineData("Fixed",                 "[Fixed]")]
+        [InlineData("F:i_x.e-d",             "[F:i_x.e-d]")]
+        [InlineData("{now:yyyy:MM _.-  dd}", "[2020:12 _.-  01]")]
+        [InlineData("{env.OS:lower}",        "[windows_nt]")]
+        [InlineData("{env.OS:upper}",        "[WINDOWS_NT]")]
+        [InlineData("{env.OS}",              "[Windows_NT]")]
         public void Parse(string input, string expectedOutput)
         {
             // arrange
@@ -112,13 +123,31 @@
             Assert.Equal(expectedOutput, result);
         }
 
-        private static LanguageParser.ExpressionContext GetExpressionContext(string input)
+        private LanguageParser.ExpressionContext GetExpressionContext(string input)
         {
             var inputStream = new AntlrInputStream(input);
             var lexer = new LanguageLexer(inputStream);
             var commonTokenStream = new CommonTokenStream(lexer);
             var parser = new LanguageParser(commonTokenStream);
-            return parser.expression();
+            var result =  parser.expression();
+
+            _output.WriteLine($"input: '{input}'");
+            _output.WriteLine(string.Empty);
+
+            _output.WriteLine("-- TokenStream --");
+            _output.WriteLine(string.Empty);
+
+            foreach (var token in commonTokenStream.GetTokens())
+            {
+                var displayName = "EOF";
+
+                if (token.Type != -1)
+                    displayName = lexer.Vocabulary.GetDisplayName(token.Type);
+
+                _output.WriteLine(token.ToString()?.Replace($"<{token.Type}>", $"<{displayName}>"));
+            }
+
+            return result;
         }
     }
 }

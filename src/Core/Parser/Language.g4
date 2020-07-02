@@ -3,49 +3,27 @@
 /*------------------------------------------------------------------
  * PARSER RULES
  *------------------------------------------------------------------*/
-
-expression          : (static|myvar)*
+expression          : ( text | variable )*
                     ;
 
-myvar               : OPEN(myvar2) CLOSE
+variable            : '{' var=KEY (':' arg=text)? '}'
                     ;
 
-myvar2              : AB(SEP AB)?
+text                : ( TEXT | KEY | ':' )+
                     ;
-
-static              : NAME
-                    ;
-
 
 /*------------------------------------------------------------------
  * LEXER RULES
  *------------------------------------------------------------------*/
-
 fragment LETTER     : [a-zA-Z] ;
 fragment DIGIT      : [0-9] ;
-fragment LOWERCASE  : [a-z] ;
-fragment UPPERCASE  : [A-Z] ;
 fragment UNDERSCORE : '_' ;
-fragment EXCEPT_END : [^}] ;
+fragment WS         : ' ' ;
+fragment DOT        : '.' ;
+fragment MINUS      : '-' ;
+fragment SEMICOLUMN : ':' ;
 
-OPEN                : '{' ;
-CLOSE                : '}' ;
-SEP                 : ':' ;
-
-STATIC_TEXT			: (LETTER DIGIT)+ ;
-
-ASTERISK            : '*' ;
-SLASH               : '/' ;
-PLUS                : '+' ;
-MINUS               : '-' ;
-
-ID                  : LETTER DIGIT;
-fragment WS         : ' ';
-DOT                 : '.';
-
-AB				    : LETTER(LETTER|UNDERSCORE|DIGIT|DOT)+ ;
-NAME				: (DIGIT|LETTER|WS|UNDERSCORE|DOT)+ ;
-
-NUMBER              : DIGIT+ ('.' DIGIT+)? ;
-
-// WHITESPACE          : ' ' -> channel(HIDDEN) ;
+KEY				    : LETTER(LETTER|DIGIT|UNDERSCORE|DOT|MINUS)+ ;
+TEXT				:       (LETTER|DIGIT|UNDERSCORE|DOT|MINUS|WS)+;
+NEWLINE             : ('\r'? '\n' | '\r') -> channel(HIDDEN) ;
+WHITESPACE          : (' ' | '\t' ) -> channel(HIDDEN) ;
