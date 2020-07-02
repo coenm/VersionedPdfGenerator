@@ -23,7 +23,7 @@ fragment DOT        : '.' ;
 fragment MINUS      : '-' ;
 fragment SEMICOLUMN : ':' ;
 
-KEY				    : LETTER(LETTER|DIGIT|UNDERSCORE|DOT|MINUS)+ ;
-TEXT				:       (LETTER|DIGIT|UNDERSCORE|DOT|MINUS|WS)+;
+KEY                 : LETTER(LETTER|DIGIT|UNDERSCORE|DOT|MINUS)+ ;
+TEXT                :       (LETTER|DIGIT|UNDERSCORE|DOT|MINUS|WS)+;
 NEWLINE             : ('\r'? '\n' | '\r') -> channel(HIDDEN) ;
 WHITESPACE          : (' ' | '\t' ) -> channel(HIDDEN) ;
