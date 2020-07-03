@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.IO;
 
-    using PdfGenerator.CommandLineOptions.VerbInterfaces;
     using PdfGenerator.CommandLineOptions.Verbs;
     using PdfGenerator.Commands;
     using PdfGenerator.ConfigFile;

@@ -4,10 +4,8 @@
 
     using CommandLine;
 
-    using PdfGenerator.CommandLineOptions.VerbInterfaces;
-
     [Verb("create", isDefault: true, HelpText = "Create output file")]
-    public class CreateOptions : IConfigFileOption, IDryRunOption, IVariablesOption, IOutputFilenameOption, IForceOption, ICommandLineCommand
+    public class CreateOptions : ICommandLineCommand
     {
         [Value(0, Required = true, HelpText = "Input filename.")]
         public string Filename { get; set; }
@@ -20,6 +18,9 @@
 
         [Option('f', "force", Required =  false, Default = false)]
         public bool Force { get; set; }
+
+        [Option('j', "json-gitversion-file", Required = false, HelpText = "Location of GitVersion (json) file", Default = null)]
+        public string GitVersionJsonFile { get; set; }
 
         [Option("dry-run", Required = false, Default = null, HelpText = "Dry Run")]
         public bool DryRun { get; set; }

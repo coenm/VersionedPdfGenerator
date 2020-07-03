@@ -2,8 +2,6 @@
 {
     using CommandLine;
 
-    using PdfGenerator.CommandLineOptions.VerbInterfaces;
-
     [Verb("generate-config") ]
     public class GenerateConfigOptions : ICommandLineCommand
     {

@@ -19,5 +19,7 @@
         public string DefaultTimeFormat{ get; set; }
 
         public string DefaultDateTimeFormat{ get; set; }
+
+        public string GitVersionFile { get; set; }
     }
 }

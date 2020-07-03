@@ -12,7 +12,6 @@
     using Core.VariableProviders.DateTime;
     using Core.VariableProviders.FileInfo;
     using Core.VariableProviders.GitVersion;
-    using PdfGenerator.CommandLineOptions.VerbInterfaces;
     using PdfGenerator.CommandLineOptions.Verbs;
     using PdfGenerator.Commands;
     using PdfGenerator.ConfigFile;
@@ -66,6 +65,7 @@
             var defaultTimeFormat = "HH.mm.ss";
             var defaultDateFormat = "yyyy-M-d";
             var defaultDateTimeFormat = "yyyy-M-d HH.mm.ss";
+            string gitversionJsonFile = null;
 
             if (config != null)
             {
@@ -96,6 +96,8 @@
                     if (!string.IsNullOrWhiteSpace(config.DefaultFormats.TimeFormat))
                         defaultTimeFormat = config.DefaultFormats.TimeFormat;
                 }
+
+                gitversionJsonFile = config.GitVersionJsonFile;
             }
 
             char[] sep = { '=' };
@@ -121,6 +123,10 @@
             if (createOptions.Force)
                 forceOutput = createOptions.Force;
 
+
+            if (!string.IsNullOrWhiteSpace(createOptions.GitVersionJsonFile))
+                gitversionJsonFile = createOptions.GitVersionJsonFile;
+
             var createCommand =  new CreateCommand
                 {
                     InputFile = createOptions.Filename,
@@ -131,6 +137,7 @@
                     DefaultTimeFormat = defaultTimeFormat,
                     DefaultDateFormat = defaultDateFormat,
                     DefaultDateTimeFormat = defaultDateTimeFormat,
+                    GitVersionFile = gitversionJsonFile,
             };
 
             Execute(createCommand);
@@ -156,8 +163,13 @@
                                     new PathSeparatorVariableProvider(),
                                     new EmptyVariableProvider(),
                                     new EnvironmentVariableVariableProvider(stringFormatter),
-                                    new GitVersionVariableProvider(new GitVersionJsonReader(GitVersionFakeContent.GITVERSION_JSON)),
                                 };
+            if (!string.IsNullOrWhiteSpace(command.GitVersionFile) && File.Exists(command.GitVersionFile))
+            {
+                var gitVersionJsonContent = File.ReadAllText(command.GitVersionFile);
+                if (!string.IsNullOrWhiteSpace(gitVersionJsonContent))
+                    providers.Add(new GitVersionVariableProvider(new GitVersionJsonReader(gitVersionJsonContent)));
+            }
 
             var ctx = new Context(DateTime.Now, command.InputFile);
 

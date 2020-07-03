@@ -6,7 +6,7 @@
 
     using CommandLine;
 
-    using PdfGenerator.CommandLineOptions.VerbInterfaces;
+    using PdfGenerator.CommandLineOptions.Verbs;
 
     public static class CommandLineParser
     {

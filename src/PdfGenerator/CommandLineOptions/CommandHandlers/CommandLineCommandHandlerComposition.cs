@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using PdfGenerator.CommandLineOptions.VerbInterfaces;
+    using PdfGenerator.CommandLineOptions.Verbs;
 
     public class CommandLineCommandHandlerComposition
     {
