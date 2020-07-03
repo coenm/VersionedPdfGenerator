@@ -63,6 +63,9 @@
             var variables = new Dictionary<string, string>();
             string outputFilename = null;
             var forceOutput = false;
+            var defaultTimeFormat = "HH.mm.ss";
+            var defaultDateFormat = "yyyy-M-d";
+            var defaultDateTimeFormat = "yyyy-M-d HH.mm.ss";
 
             if (config != null)
             {
@@ -81,6 +84,18 @@
 
                 if (config.OverwriteOutputWhenExist.HasValue)
                     forceOutput = config.OverwriteOutputWhenExist.Value;
+
+                if (config.DefaultFormats != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(config.DefaultFormats.DateFormat))
+                        defaultDateFormat = config.DefaultFormats.DateFormat;
+
+                    if (!string.IsNullOrWhiteSpace(config.DefaultFormats.DateTimeFormat))
+                        defaultDateTimeFormat = config.DefaultFormats.DateTimeFormat;
+
+                    if (!string.IsNullOrWhiteSpace(config.DefaultFormats.TimeFormat))
+                        defaultTimeFormat = config.DefaultFormats.TimeFormat;
+                }
             }
 
             char[] sep = { '=' };
@@ -112,7 +127,11 @@
                     OutputFile = outputFilename,
                     Variables = variables,
                     ForceOutput = forceOutput,
-                };
+                    DryRun = createOptions.DryRun,
+                    DefaultTimeFormat = defaultTimeFormat,
+                    DefaultDateFormat = defaultDateFormat,
+                    DefaultDateTimeFormat = defaultDateTimeFormat,
+            };
 
             Execute(createCommand);
         }
@@ -120,9 +139,9 @@
         private static void Execute(CreateCommand command)
         {
             var dateTimeFormatter = new ConfigurableDateTimeFormatter(
-                                                                      "yyyy-M-d HH.mm.ss",
-                                                                      "yyyy-M-d",
-                                                                      "HH.mm.ss");
+                                                                      command.DefaultDateTimeFormat,
+                                                                      command.DefaultDateFormat,
+                                                                      command.DefaultTimeFormat);
             var stringFormatter = new StringFormatter();
 
             var providers = new List<IVariableProvider>
@@ -146,7 +165,6 @@
             var outputFilename = visitor.Visit(GetExpressionContext(command.OutputFile));
 
             var docVars = new Dictionary<string, string>();
-
             foreach (var item in command.Variables)
             {
                 try
@@ -162,7 +180,11 @@
                 }
             }
 
-            var generator = new GeneratePdf();
+            IPdfGenerator generator = new PdfGenerator();
+
+            if (command.DryRun)
+                generator = new DryRunDecorator(generator);
+
             generator.Generate(command.InputFile, outputFilename, docVars);
         }
 

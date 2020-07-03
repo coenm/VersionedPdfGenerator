@@ -11,5 +11,13 @@
         public string OutputFile { get; set; }
 
         public bool ForceOutput { get; set; }
+
+        public bool DryRun { get; set; }
+
+        public string DefaultDateFormat { get; set; }
+
+        public string DefaultTimeFormat{ get; set; }
+
+        public string DefaultDateTimeFormat{ get; set; }
     }
 }
