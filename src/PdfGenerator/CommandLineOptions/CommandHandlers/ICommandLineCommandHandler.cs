@@ -1,6 +1,5 @@
-﻿namespace PdfGenerator.CommandLineCommandHandlers
+﻿namespace PdfGenerator.CommandLineOptions.CommandHandlers
 {
-    using PdfGenerator.CommandLineOptions;
     using PdfGenerator.CommandLineOptions.VerbInterfaces;
 
     public interface ICommandLineCommandHandler

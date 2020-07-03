@@ -1,0 +1,40 @@
+﻿namespace PdfGenerator
+{
+    public static class GitVersionFakeContent
+    {
+        public const string GITVERSION_JSON= @"
+{
+  ""Major"":0,
+  ""Minor"":1,
+  ""Patch"":0,
+  ""PreReleaseTag"":""24830-GetContactsForDocumentByIds.1"",
+  ""PreReleaseTagWithDash"":""-24830-GetContactsForDocumentByIds.1"",
+  ""PreReleaseLabel"":""24830-GetContactsForDocumentByIds"",
+  ""PreReleaseNumber"":1,
+  ""WeightedPreReleaseNumber"":30001,
+  ""BuildMetaData"":487,
+  ""BuildMetaDataPadded"":""0487"",
+  ""FullBuildMetaData"":""487.Branch.feature-24830-GetContactsForDocumentByIds.Sha.4d9353f04138567556ed8c547bc10564fa80be67"",
+  ""MajorMinorPatch"":""0.1.0"",
+  ""SemVer"":""0.1.0-24830-GetContactsForDocumentByIds.1"",
+  ""LegacySemVer"":""0.1.0-24830-GetContactsFo1"",
+  ""LegacySemVerPadded"":""0.1.0-24830-GetContact0001"",
+  ""AssemblySemVer"":""0.1.0.0"",
+  ""AssemblySemFileVer"":""0.1.0.0"",
+  ""FullSemVer"":""0.1.0-24830-GetContactsForDocumentByIds.1+487"",
+  ""InformationalVersion"":""0.1.0-24830-GetContactsForDocumentByIds.1+487.Branch.feature-24830-GetContactsForDocumentByIds.Sha.4d9353f04138567556ed8c547bc10564fa80be67"",
+  ""BranchName"":""feature/24830_GetContactsForDocumentByIds"",
+  ""Sha"":""4d9353f04138567556ed8c547bc10564fa80be67"",
+  ""ShortSha"":""4d9353f"",
+  ""NuGetVersionV2"":""0.1.0-24830-getcontact0001"",
+  ""NuGetVersion"":""0.1.0-24830-getcontact0001"",
+  ""NuGetPreReleaseTagV2"":""24830-getcontact0001"",
+  ""NuGetPreReleaseTag"":""24830-getcontact0001"",
+  ""VersionSourceSha"":""9a9de099220d3135d645ccbdaa4f76fdbf5b2c29"",
+  ""CommitsSinceVersionSource"":487,
+  ""CommitsSinceVersionSourcePadded"":""0487"",
+  ""CommitDate"":""2020-04-01""
+}
+";
+    }
+}
