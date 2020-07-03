@@ -180,7 +180,7 @@
                 }
             }
 
-            IPdfGenerator generator = new PdfGenerator();
+            IPdfGenerator generator = new WordInteropPdfGenerator(showAnimation:false, wordVisible:false, screenUpdating:false);
 
             if (command.DryRun)
                 generator = new DryRunDecorator(generator);

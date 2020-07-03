@@ -5,13 +5,13 @@
 
     using Microsoft.Office.Interop.Word;
 
-    public class PdfGenerator : IPdfGenerator
+    public class WordInteropPdfGenerator : IPdfGenerator
     {
         private readonly bool _showAnimation;
         private readonly bool _wordVisible;
         private readonly bool _screenUpdating;
 
-        public PdfGenerator(bool showAnimation, bool wordVisible, bool screenUpdating)
+        public WordInteropPdfGenerator(bool showAnimation, bool wordVisible, bool screenUpdating)
         {
             _showAnimation = showAnimation;
             _wordVisible = wordVisible;
