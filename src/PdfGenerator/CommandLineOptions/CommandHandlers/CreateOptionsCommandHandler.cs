@@ -16,6 +16,7 @@
     using PdfGenerator.Commands;
     using PdfGenerator.ConfigFile;
     using PdfGenerator.WordInterop;
+    using VariableProvider.Git;
     using YamlDotNet.Serialization;
 
     public class CreateOptionsCommandHandler : ICommandLineCommandHandler
@@ -163,6 +164,7 @@
                                     new PathSeparatorVariableProvider(),
                                     new EmptyVariableProvider(),
                                     new EnvironmentVariableVariableProvider(stringFormatter),
+                                    new GitVariableProviderComposition(),
                                 };
             if (!string.IsNullOrWhiteSpace(command.GitVersionFile) && File.Exists(command.GitVersionFile))
             {
