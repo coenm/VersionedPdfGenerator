@@ -10,7 +10,8 @@
     using Core.VariableProviders;
     using Core.VariableProviders.DateTime;
     using Core.VariableProviders.FileInfo;
-    using Core.VariableProviders.GitVersion;
+    using VariableProvider.Git;
+    using VariableProvider.GitVersion;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -62,6 +63,7 @@
                                                                       "yyyy-M-d",
                                                                       "HH.mm.ss");
             var stringFormatter = new StringFormatter();
+
             _providers = new List<IVariableProvider>
                             {
                                 new DateTimeNowVariableProvider(dateTimeFormatter),
@@ -75,6 +77,7 @@
                                 new EmptyVariableProvider(),
                                 new EnvironmentVariableVariableProvider(stringFormatter),
                                 new GitVersionVariableProvider(new GitVersionJsonReader(JSON_CONTENT)),
+                                new GitVariableProviderComposition(),
                             };
         }
 

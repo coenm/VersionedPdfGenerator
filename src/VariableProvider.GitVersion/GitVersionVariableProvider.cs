@@ -1,6 +1,9 @@
-﻿namespace Core.VariableProviders.GitVersion
+﻿namespace VariableProvider.GitVersion
 {
     using System;
+
+    using Core;
+    using Core.VariableProviders;
 
     public class GitVersionVariableProvider : IVariableProvider
     {
@@ -9,7 +12,7 @@
 
         public GitVersionVariableProvider(GitVersionJsonReader reader)
         {
-            _reader = reader;
+            _reader = reader ?? throw new ArgumentNullException(nameof(reader));
         }
 
         public bool CanProvide(string key)

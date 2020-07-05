@@ -1,4 +1,4 @@
-﻿namespace Core.VariableProviders.GitVersion
+﻿namespace VariableProvider.GitVersion
 {
     using System;
 

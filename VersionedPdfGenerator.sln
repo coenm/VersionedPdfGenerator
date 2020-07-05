@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VariableProvider.Git", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VariableProvider.Git.Tests", "tests\VariableProvider.Git.Tests\VariableProvider.Git.Tests.csproj", "{099D581C-14E1-4D2B-9917-E7DB507C8B36}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VariableProvider.GitVersion", "src\VariableProvider.GitVersion\VariableProvider.GitVersion.csproj", "{C232BBA0-FD29-4194-89A7-7E04582214C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{099D581C-14E1-4D2B-9917-E7DB507C8B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{099D581C-14E1-4D2B-9917-E7DB507C8B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{099D581C-14E1-4D2B-9917-E7DB507C8B36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C232BBA0-FD29-4194-89A7-7E04582214C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C232BBA0-FD29-4194-89A7-7E04582214C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C232BBA0-FD29-4194-89A7-7E04582214C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C232BBA0-FD29-4194-89A7-7E04582214C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

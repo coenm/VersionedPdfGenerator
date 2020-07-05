@@ -11,12 +11,12 @@
     using Core.VariableProviders;
     using Core.VariableProviders.DateTime;
     using Core.VariableProviders.FileInfo;
-    using Core.VariableProviders.GitVersion;
     using PdfGenerator.CommandLineOptions.Verbs;
     using PdfGenerator.Commands;
     using PdfGenerator.ConfigFile;
     using PdfGenerator.WordInterop;
     using VariableProvider.Git;
+    using VariableProvider.GitVersion;
     using YamlDotNet.Serialization;
 
     public class CreateOptionsCommandHandler : ICommandLineCommandHandler
