@@ -10,8 +10,6 @@
 
         public bool? OverwriteOutputWhenExist { get; set; }
 
-        public string GitVersionJsonFile { get; set; }
-
         public DefaultFormats DefaultFormats { get; set; }
 
         public Dictionary<string, string> DocVariables { get; set; }

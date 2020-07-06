@@ -52,49 +52,6 @@
                                       });
         }
 
-        [Fact]
-        public void Parse_ShouldReturnCreateOptions_WhenInputIsCorrect2()
-        {
-            // arrange
-            var args = new[]
-                           {
-                               "create",
-                               "C:\\Users\\coenm\\Documents\\MyDocument.docx",
-                               "-j", "D:\\gitversion.json",
-                               "-c", "D:\\VersionedPdfGenerator.yaml",
-                               "-o", "{filepath}{PathSeparator}{now:yyyyMMddHHmmss}_{env.username:lower}_{filenamebase}.pdf",
-                               "--dry-run",
-                               "--vars",
-                               "Author=Coen",
-                               "Age=1",
-                               "SHA={gitversion.sha}",
-                               "Desc=this is some text",
-                               "GitVersion=v.{GitVersion.FullSemVer} -- Last commit {gitVersion.CommitDate}"
-                           };
-
-            // act
-            var result = Sut.Parse(args);
-
-            // assert
-            result.Should()
-                  .BeEquivalentTo(new CreateOptions
-                  {
-                      ConfigFile = @"D:\VersionedPdfGenerator.yaml",
-                      AdditionalVariables = new[]
-                                                                    {
-                                                                        "Author=Coen",
-                                                                        "Age=1",
-                                                                        "SHA={gitversion.sha}",
-                                                                        "Desc=this is some text",
-                                                                        "GitVersion=v.{GitVersion.FullSemVer} -- Last commit {gitVersion.CommitDate}",
-                                                                    },
-                      Force = false,
-                      DryRun = true,
-                      OutputFilename = "{filepath}{PathSeparator}{now:yyyyMMddHHmmss}_{env.username:lower}_{filenamebase}.pdf",
-                      Filename = "C:\\Users\\coenm\\Documents\\MyDocument.docx",
-                      GitVersionJsonFile = "D:\\gitversion.json",
-                  });
-        }
 
 
         [Fact]

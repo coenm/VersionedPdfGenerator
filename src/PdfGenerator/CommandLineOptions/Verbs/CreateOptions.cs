@@ -19,9 +19,6 @@
         [Option('f', "force", Required =  false, Default = false)]
         public bool Force { get; set; }
 
-        [Option('j', "json-gitversion-file", Required = false, HelpText = "Location of GitVersion (json) file", Default = null)]
-        public string GitVersionJsonFile { get; set; }
-
         [Option("dry-run", Required = false, Default = null, HelpText = "Dry Run")]
         public bool DryRun { get; set; }
 

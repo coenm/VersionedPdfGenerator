@@ -38,7 +38,6 @@
                                                           },
                                      OutputPath = "{filepath}",
                                      OutputFilename = "{filenamebase}.pdf",
-                                     GitVersionJsonFile = "{filepath}{PathSeparator}GitVersion.json",
                                      OverwriteOutputWhenExist = true,
                                      DocVariables = new Dictionary<string, string>
                                                         {
