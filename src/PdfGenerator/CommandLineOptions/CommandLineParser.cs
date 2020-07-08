@@ -5,7 +5,6 @@
     using System.Reflection;
 
     using CommandLine;
-
     using PdfGenerator.CommandLineOptions.Verbs;
 
     public static class CommandLineParser
@@ -21,8 +20,7 @@
                                    {
                                        if (options is ICommandLineCommand argCommand)
                                            result = argCommand;
-                                   })
-                       .WithNotParsed(errs => throw new Exception(errs.ToString()));
+                                   });
 
             return result;
         }

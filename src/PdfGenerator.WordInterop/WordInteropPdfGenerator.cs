@@ -46,8 +46,9 @@
                 doc.Variables.Add(item.Key, (object)item.Value);
             }
 
-            object outputFileName = outputPdfFilename;
+            UpdateFields(doc);
 
+            object outputFileName = outputPdfFilename;
             object fileFormat = WdSaveFormat.wdFormatPDF;
 
             // Save document into PDF Format
@@ -69,6 +70,47 @@
             // the correct Quit method.
             ((_Application)wordApplication).Quit(ref oMissing, ref oMissing, ref oMissing);
             wordApplication = null;
+        }
+
+        private static void UpdateFields(Document doc)
+        {
+            doc.Fields.Update();
+
+            foreach (var field in GetAllFields(doc))
+            {
+                field.Update();
+            }
+        }
+
+        // taken from https://stackoverflow.com/questions/31964938/how-to-update-fields-in-headers-and-footers-not-just-main-document
+        private static IEnumerable<Field> GetAllFields(Document document)
+        {
+            // Main text story fields (doesn't include fields in headers and footers)
+            foreach (Field field in document.Fields)
+            {
+                yield return field;
+            }
+
+            foreach (Section section in document.Sections)
+            {
+                // Header fields
+                foreach (HeaderFooter header in section.Headers)
+                {
+                    foreach (Field field in header.Range.Fields)
+                    {
+                        yield return field;
+                    }
+                }
+
+                // Footer fields
+                foreach (HeaderFooter footer in section.Footers)
+                {
+                    foreach (Field field in footer.Range.Fields)
+                    {
+                        yield return field;
+                    }
+                }
+            }
         }
     }
 }

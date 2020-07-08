@@ -13,7 +13,6 @@
         public string Provide(Context context, string key, string arg)
         {
             return new string(Path.DirectorySeparatorChar, 1);
-            // return Path.DirectorySeparatorChar + "";
         }
     }
 }

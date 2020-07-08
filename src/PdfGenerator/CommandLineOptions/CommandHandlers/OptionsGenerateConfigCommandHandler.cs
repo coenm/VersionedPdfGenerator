@@ -8,7 +8,7 @@
     using PdfGenerator.Commands;
     using PdfGenerator.ConfigFile;
 
-    public class GenerateConfigOptionsCommandHandler : ICommandLineCommandHandler
+    public class OptionsGenerateConfigCommandHandler : ICommandLineCommandHandler
     {
         public bool CanHandle(ICommandLineCommand command)
         {

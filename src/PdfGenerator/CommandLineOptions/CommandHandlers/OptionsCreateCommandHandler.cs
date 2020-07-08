@@ -6,6 +6,7 @@
 
     using Antlr4.Runtime;
     using Core;
+    using Core.Config;
     using Core.Formatters;
     using Core.Parser;
     using Core.VariableProviders;
@@ -19,8 +20,17 @@
     using VariableProvider.GitVersion;
     using YamlDotNet.Serialization;
 
-    public class CreateOptionsCommandHandler : ICommandLineCommandHandler
+    public class OptionsCreateCommandHandler : ICommandLineCommandHandler
     {
+        private readonly IAbsolutePathService _absolutePathService;
+        private readonly List<IDynamicConfigFileLocator> _configFileLocator;
+
+        public OptionsCreateCommandHandler(IAbsolutePathService absolutePathService, List<IDynamicConfigFileLocator> configFileLocator)
+        {
+            _absolutePathService = absolutePathService ?? throw new ArgumentNullException(nameof(absolutePathService));
+            _configFileLocator = configFileLocator ?? throw new ArgumentNullException(nameof(configFileLocator));
+        }
+
         public bool CanHandle(ICommandLineCommand command)
         {
             return command is CreateOptions;
@@ -31,31 +41,26 @@
             if (!(command is CreateOptions createOptions))
                 throw new ArgumentNullException(nameof(command));
 
+            var inputFilename = _absolutePathService.GetExistingAbsoluteFilename(createOptions.Filename);
+            if (inputFilename == null)
+                throw new Exception("Could not find input file");
+
             Config config = null;
-            var fullConfigFilename = string.Empty;
 
             if (!string.IsNullOrWhiteSpace(createOptions.ConfigFile))
             {
                 var filename = createOptions.ConfigFile;
+                config = LoadConfig(filename);
+            }
 
-                if (File.Exists(filename))
+            if (config == null)
+            {
+                // find other config file and load.
+                foreach (var configFileLocator in _configFileLocator)
                 {
-                    var result = new FileInfo(filename);
-                    fullConfigFilename = result.FullName;
-                }
-
-                if (!string.IsNullOrWhiteSpace(fullConfigFilename))
-                {
-                    try
+                    foreach (var f in configFileLocator.Locate(inputFilename))
                     {
-                        using var fileStream = new FileStream(fullConfigFilename, FileMode.Open);
-                        using var reader = new StreamReader(fileStream);
-                        var deserializer = new Deserializer();
-                        config = deserializer.Deserialize<Config>(reader);
-                    }
-                    catch (Exception)
-                    {
-                        // do nothing.
+                        config ??= LoadConfig(f);
                     }
                 }
             }
@@ -80,7 +85,12 @@
                         variables.Add(key, value);
                 }
 
-                outputFilename = config.OutputFilename;
+                if (string.IsNullOrWhiteSpace(config.OutputPath))
+                    outputFilename = Path.Combine(config.OutputFilename);
+                else if (string.IsNullOrWhiteSpace(config.OutputFilename))
+                    outputFilename = Path.Combine(config.OutputPath, new FileInfo(inputFilename).Name + ".pdf");
+                else
+                    outputFilename = Path.Combine(config.OutputPath, config.OutputFilename);
 
                 if (config.OverwriteOutputWhenExist.HasValue)
                     forceOutput = config.OverwriteOutputWhenExist.Value;
@@ -116,14 +126,17 @@
             }
 
             if (!string.IsNullOrWhiteSpace(createOptions.OutputFilename))
+            {
+                // todo make absolute path.
                 outputFilename = createOptions.OutputFilename;
+            }
 
             if (createOptions.Force)
                 forceOutput = createOptions.Force;
 
             var createCommand =  new CreateCommand
                 {
-                    InputFile = createOptions.Filename,
+                    InputFile = inputFilename,
                     OutputFile = outputFilename,
                     Variables = variables,
                     ForceOutput = forceOutput,
@@ -134,6 +147,34 @@
                 };
 
             Execute(createCommand);
+        }
+
+        private static Config LoadConfig(string filename)
+        {
+            var fullConfigFilename = string.Empty;
+
+            if (File.Exists(filename))
+            {
+                var result = new FileInfo(filename);
+                fullConfigFilename = result.FullName;
+            }
+
+            if (string.IsNullOrWhiteSpace(fullConfigFilename))
+                return null;
+
+            try
+            {
+                using var fileStream = new FileStream(fullConfigFilename, FileMode.Open);
+                using var reader = new StreamReader(fileStream);
+                var deserializer = new Deserializer();
+                return deserializer.Deserialize<Config>(reader);
+            }
+            catch (Exception)
+            {
+                // do nothing.
+            }
+
+            return null;
         }
 
         private static void Execute(CreateCommand command)
@@ -175,9 +216,8 @@
                     var value = visitor.Visit(expressionContext);
                     docVars.Add(key, value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    var x = e.Message;
                     // skip
                 }
             }
@@ -186,6 +226,11 @@
 
             if (command.DryRun)
                 generator = new DryRunDecorator(generator);
+
+            Console.WriteLine("OUTPUT filename: "+ outputFilename);
+
+            if (!command.ForceOutput && File.Exists(outputFilename))
+                return;
 
             generator.Generate(command.InputFile, outputFilename, docVars);
         }
