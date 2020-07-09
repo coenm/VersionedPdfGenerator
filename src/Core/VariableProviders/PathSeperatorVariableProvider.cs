@@ -5,7 +5,7 @@
 
     public class PathSeparatorVariableProvider : IVariableProvider
     {
-        private const string KEY = "PathSeperator";
+        private const string KEY = "PathSeparator";
 
         public bool CanProvide(string key)
         {
