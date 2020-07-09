@@ -9,8 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="Costura.Fody" Version="4.1.0" />
+    <PackageReference Include="Fody" Version="6.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="YamlDotNet" Version="8.1.2" />
-    <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0034" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +22,11 @@
     <ProjectReference Include="..\PdfGenerator.WordInterop\PdfGenerator.WordInterop.csproj" />
     <ProjectReference Include="..\VariableProvider.GitVersion\VariableProvider.GitVersion.csproj" />
     <ProjectReference Include="..\VariableProvider.Git\VariableProvider.Git.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="costura32\*.dll" />
+    <EmbeddedResource Include="costura64\*.dll" />
   </ItemGroup>
 
 </Project>
