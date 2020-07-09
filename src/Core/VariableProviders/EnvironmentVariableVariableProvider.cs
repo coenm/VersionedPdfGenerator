@@ -11,7 +11,7 @@
 
         public EnvironmentVariableVariableProvider(IStringFormatter stringFormatter)
         {
-            _stringFormatter = stringFormatter;
+            _stringFormatter = stringFormatter ?? throw new ArgumentNullException(nameof(stringFormatter));
         }
 
         public bool CanProvide(string key)

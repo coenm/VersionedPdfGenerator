@@ -5,9 +5,11 @@
 
     public class PathSeparatorVariableProvider : IVariableProvider
     {
+        private const string KEY = "PathSeperator";
+
         public bool CanProvide(string key)
         {
-            return "PathSeparator".Equals(key, StringComparison.CurrentCultureIgnoreCase);
+            return KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public string Provide(Context context, string key, string arg)

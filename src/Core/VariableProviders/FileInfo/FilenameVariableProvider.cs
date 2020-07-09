@@ -4,9 +4,11 @@
 
     public class FilenameVariableProvider : IVariableProvider
     {
+        private const string KEY = "Filename";
+
         public bool CanProvide(string key)
         {
-            return "filename".Equals(key, StringComparison.CurrentCultureIgnoreCase);
+            return KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public string Provide(Context context, string key, string arg)

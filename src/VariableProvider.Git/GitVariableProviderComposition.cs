@@ -9,11 +9,12 @@
     using LibGit2Sharp;
     using VariableProvider.Git.VariableProviders;
 
-    public class GitVariableProviderComposition : IVariableProvider
+    public class GitVariableProviderComposition : IVariableProvider, IVariableDescriptor
     {
         private const string PREFIX = "git.";
 
         private readonly List<IGitVariableProvider> _gitProviders;
+        private readonly List<IGitVariableDescriptor> _gitVariableDescriptionProviders;
 
         public GitVariableProviderComposition()
         {
@@ -22,6 +23,11 @@
                                    new ShaProvider(),
                                    new RootDirectoryProvider(),
                                };
+
+            _gitVariableDescriptionProviders = _gitProviders
+                                               .Select(x => x as IGitVariableDescriptor)
+                                               .Where(x => x != null)
+                                               .ToList();
         }
 
         public bool CanProvide(string key)
@@ -55,6 +61,17 @@
                 return provider is null
                            ? string.Empty
                            : provider.Provide(repo, gitVariableKey, arg);
+            }
+        }
+
+        public IEnumerable<VariableDescription> Get()
+        {
+            foreach (var provider in _gitVariableDescriptionProviders)
+            {
+                foreach (var description in provider.Get())
+                {
+                    yield return new VariableDescription(PREFIX + description.Key, description.Description);
+                }
             }
         }
     }

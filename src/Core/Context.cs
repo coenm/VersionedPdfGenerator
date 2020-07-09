@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-    public class Context
+    public readonly struct Context
     {
         public Context(DateTime now, string filename)
         {

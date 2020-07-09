@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
 
     using Core;
@@ -11,11 +10,12 @@
     using LibGit2Sharp;
     using VariableProvider.GitVersion.Providers;
 
-    public class GitVersionVariableProviderComposition : IVariableProvider
+    public class GitVersionVariableProviderComposition : IVariableProvider, IVariableDescriptor
     {
         private const string PREFIX = "gitversion.";
 
         private readonly List<IGitVersionVariableProvider> _providers;
+        private readonly List<IGitVersionVariableDescriptor> _gitVariableDescriptionProviders;
 
         public GitVersionVariableProviderComposition(ConfigurableDateTimeFormatter dateTimeFormatter)
         {
@@ -27,6 +27,11 @@
                                 new CommitDateProvider(dateTimeFormatter),
                                 new DynamicGitVersionProvider(),
                             };
+
+            _gitVariableDescriptionProviders = _providers
+                                               .Select(x => x as IGitVersionVariableDescriptor)
+                                               .Where(x => x != null)
+                                               .ToList();
         }
 
         public bool CanProvide(string key)
@@ -60,6 +65,17 @@
                 return provider is null
                            ? string.Empty
                            : provider.Provide(versionInfo.executeGitVersion, versionInfo.variables, gitVariableKey, arg);
+            }
+        }
+
+        public IEnumerable<VariableDescription> Get()
+        {
+            foreach (var provider in _gitVariableDescriptionProviders)
+            {
+                foreach (var description in provider.Get())
+                {
+                    yield return new VariableDescription(PREFIX + description.Key, description.Description);
+                }
             }
         }
     }

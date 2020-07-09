@@ -4,9 +4,11 @@
 
     public class FilePathVariableProvider : IVariableProvider
     {
+        private const string KEY = "FilePath";
+
         public bool CanProvide(string key)
         {
-            return "filepath".Equals(key, StringComparison.CurrentCultureIgnoreCase);
+            return KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public string Provide(Context context, string key, string arg)

@@ -6,6 +6,7 @@
 
     public class FileExtensionVariableProvider : IVariableProvider
     {
+        private const string KEY = "FileExtension";
         private readonly IStringFormatter _stringFormatterComposition;
 
         public FileExtensionVariableProvider(IStringFormatter stringFormatterComposition)
@@ -15,7 +16,7 @@
 
         public bool CanProvide(string key)
         {
-            return "fileextension".Equals(key, StringComparison.CurrentCultureIgnoreCase);
+            return KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public string Provide(Context context, string key, string arg)

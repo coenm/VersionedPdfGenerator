@@ -4,14 +4,10 @@
 
     public class EmptyVariableProvider : IVariableProvider
     {
-        public bool CanProvide(string key)
-        {
-            return "empty".Equals(key, StringComparison.CurrentCultureIgnoreCase);
-        }
+        private const string KEY = "empty";
 
-        public string Provide(Context context, string key, string arg)
-        {
-            return string.Empty;
-        }
+        public bool CanProvide(string key) => KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase);
+
+        public string Provide(Context context, string key, string arg) => string.Empty;
     }
 }

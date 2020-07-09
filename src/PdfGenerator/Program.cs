@@ -35,10 +35,10 @@
                                                  {
                                                      new OptionsCreateCommandHandler(absolutePathService, configFileLocators),
                                                      new OptionsGenerateConfigCommandHandler(),
+                                                     new OptionsListAllVariablesCommandHandler(),
                                                  };
 
             var compositeCommandLineCommandHandler = new CommandLineCommandHandlerComposition(commandLineCommandHandlers);
-
 
             ICommandLineCommand command = null;
             try

@@ -31,7 +31,7 @@
                 if (File.Exists(fullPath))
                     return fullPath;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // ignore
             }
