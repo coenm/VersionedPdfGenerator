@@ -1,4 +1,4 @@
-﻿namespace PdfGenerator.WordInterop
+﻿namespace Core
 {
     using System.Collections.Generic;
 

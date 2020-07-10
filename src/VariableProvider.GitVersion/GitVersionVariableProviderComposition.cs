@@ -12,7 +12,7 @@
 
     public class GitVersionVariableProviderComposition : IVariableProvider, IVariableDescriptor
     {
-        private const string PREFIX = "gitversion.";
+        private const string PREFIX = "GitVersion.";
 
         private readonly List<IGitVersionVariableProvider> _providers;
         private readonly List<IGitVersionVariableDescriptor> _gitVariableDescriptionProviders;

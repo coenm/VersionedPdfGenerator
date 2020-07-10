@@ -1,10 +1,11 @@
 ﻿namespace Core.VariableProviders.DateTime
 {
     using System;
+    using System.Collections.Generic;
 
     using Core.Formatters;
 
-    public class DateTimeDateVariableProvider : IVariableProvider
+    public class DateTimeDateVariableProvider : IVariableProvider, IVariableDescriptor
     {
         private const string KEY = "Date";
         private readonly IDateTimeFormatter _formatter;
@@ -22,6 +23,11 @@
         public string Provide(Context context, string key, string arg)
         {
             return _formatter.FormatDate(context.Now);
+        }
+
+        public IEnumerable<VariableDescription> Get()
+        {
+            yield return new VariableDescription(KEY, "Now, formatted as date.");
         }
     }
 }

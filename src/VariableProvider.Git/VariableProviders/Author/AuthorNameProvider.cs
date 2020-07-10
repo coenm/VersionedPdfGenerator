@@ -1,13 +1,13 @@
-﻿namespace VariableProvider.Git.VariableProviders
+﻿namespace VariableProvider.Git.VariableProviders.Author
 {
     using System;
     using System.Collections.Generic;
 
     using LibGit2Sharp;
 
-    internal class ShaProvider : IGitVariableProvider, IGitVariableDescriptor
+    internal class AuthorNameProvider : IGitVariableProvider, IGitVariableDescriptor
     {
-        private const string KEY = "Sha";
+        private const string KEY = "Author.Name";
 
         public bool CanProvide(string key)
         {
@@ -16,12 +16,12 @@
 
         public string Provide(IRepository repo, string key, string arg)
         {
-            return repo?.Head?.Tip?.Sha ?? string.Empty;
+            return repo?.Head?.Tip?.Author?.Name ?? string.Empty;
         }
 
         public IEnumerable<GitVariableDescription> Get()
         {
-            yield return new GitVariableDescription(KEY, "The 40 character sha1 of current commit");
+            yield return new GitVariableDescription(KEY, "The name of the author of the commit.");
         }
     }
 }

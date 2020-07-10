@@ -5,9 +5,9 @@
 
     using LibGit2Sharp;
 
-    internal class ShaProvider : IGitVariableProvider, IGitVariableDescriptor
+    internal class MessageProvider : IGitVariableProvider, IGitVariableDescriptor
     {
-        private const string KEY = "Sha";
+        private const string KEY = "Message";
 
         public bool CanProvide(string key)
         {
@@ -16,12 +16,12 @@
 
         public string Provide(IRepository repo, string key, string arg)
         {
-            return repo?.Head?.Tip?.Sha ?? string.Empty;
+            return repo?.Head?.Tip?.Message ?? string.Empty;
         }
 
         public IEnumerable<GitVariableDescription> Get()
         {
-            yield return new GitVariableDescription(KEY, "The 40 character sha1 of current commit");
+            yield return new GitVariableDescription(KEY, "Commit message.");
         }
     }
 }

@@ -5,24 +5,38 @@
     using System.Linq;
 
     using Core;
+    using Core.Formatters;
     using Core.VariableProviders;
     using LibGit2Sharp;
     using VariableProvider.Git.VariableProviders;
+    using VariableProvider.Git.VariableProviders.Author;
+    using VariableProvider.Git.VariableProviders.Committer;
 
     public class GitVariableProviderComposition : IVariableProvider, IVariableDescriptor
     {
-        private const string PREFIX = "git.";
+        private const string PREFIX = "Git.";
 
         private readonly List<IGitVariableProvider> _gitProviders;
         private readonly List<IGitVariableDescriptor> _gitVariableDescriptionProviders;
 
-        public GitVariableProviderComposition()
+        public GitVariableProviderComposition(IDateTimeFormatter dateTimeFormatter)
         {
+            if (dateTimeFormatter == null)
+                throw new ArgumentNullException(nameof(dateTimeFormatter));
+
             _gitProviders = new List<IGitVariableProvider>
-                               {
-                                   new ShaProvider(),
-                                   new RootDirectoryProvider(),
-                               };
+                                {
+                                    new ShaProvider(),
+                                    new MessageProvider(),
+                                    new MessageShortProvider(),
+                                    new AuthorEmailProvider(),
+                                    new AuthorNameProvider(),
+                                    new AuthorWhenProvider(dateTimeFormatter),
+                                    new CommitterEmailProvider(),
+                                    new CommitterNameProvider(),
+                                    new CommitterWhenProvider(dateTimeFormatter),
+                                    new RootDirectoryProvider(),
+                                };
 
             _gitVariableDescriptionProviders = _gitProviders
                                                .Select(x => x as IGitVariableDescriptor)

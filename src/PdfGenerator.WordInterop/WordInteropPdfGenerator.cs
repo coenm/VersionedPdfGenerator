@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
+    using Core;
     using Microsoft.Office.Interop.Word;
 
     public class WordInteropPdfGenerator : IPdfGenerator
@@ -43,7 +44,10 @@
 
             foreach (var item in docVars)
             {
-                doc.Variables.Add(item.Key, (object)item.Value);
+                if (string.IsNullOrEmpty(item.Value))
+                    doc.Variables.Add(item.Key, " ");
+                else
+                    doc.Variables.Add(item.Key, item.Value);
             }
 
             UpdateFields(doc);

@@ -41,7 +41,7 @@
                                 new PathSeparatorVariableProvider(),
                                 new EmptyVariableProvider(),
                                 new EnvironmentVariableVariableProvider(stringFormatter),
-                                new GitVariableProviderComposition(),
+                                new GitVariableProviderComposition(dateTimeFormatter),
                                 new GitVersionVariableProviderComposition(dateTimeFormatter),
                             };
         }

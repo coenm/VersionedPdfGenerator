@@ -6,6 +6,8 @@
 
     using Core.Formatters;
     using Core.VariableProviders;
+    using Core.VariableProviders.DateTime;
+    using Core.VariableProviders.FileInfo;
     using PdfGenerator.CommandLineOptions.Verbs;
     using PdfGenerator.Commands;
     using VariableProvider.Git;
@@ -29,20 +31,21 @@
         private static void Execute(ListVariablesCommand command)
         {
             var dateTimeFormatter = new ConfigurableDateTimeFormatter(string.Empty, string.Empty, string.Empty);
+            var stringFormatter = new StringFormatter();
 
             var providers = new List<IVariableDescriptor>
                                 {
-                                    // new DateTimeNowVariableProvider(dateTimeFormatter),
-                                    // new DateTimeTimeVariableProvider(dateTimeFormatter),
-                                    // new DateTimeDateVariableProvider(dateTimeFormatter),
-                                    // new FilenameBaseVariableProvider(),
-                                    // new FilenameVariableProvider(),
-                                    // new FilePathVariableProvider(),
-                                    // new FileExtensionVariableProvider(stringFormatter),
-                                    // new PathSeparatorVariableProvider(),
-                                    // new EmptyVariableProvider(),
-                                    // new EnvironmentVariableVariableProvider(stringFormatter),
-                                    new GitVariableProviderComposition(),
+                                    new DateTimeNowVariableProvider(dateTimeFormatter),
+                                    new DateTimeTimeVariableProvider(dateTimeFormatter),
+                                    new DateTimeDateVariableProvider(dateTimeFormatter),
+                                    new FilenameBaseVariableProvider(),
+                                    new FilenameVariableProvider(),
+                                    new FilePathVariableProvider(),
+                                    new FileExtensionVariableProvider(stringFormatter),
+                                    new PathSeparatorVariableProvider(),
+                                    new EmptyVariableProvider(),
+                                    new EnvironmentVariableVariableProvider(stringFormatter),
+                                    new GitVariableProviderComposition(dateTimeFormatter),
                                     new GitVersionVariableProviderComposition(dateTimeFormatter),
                                 };
 

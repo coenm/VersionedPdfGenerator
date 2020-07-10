@@ -1,11 +1,13 @@
 ﻿namespace Core.VariableProviders
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
 
-    public class PathSeparatorVariableProvider : IVariableProvider
+    public class PathSeparatorVariableProvider : IVariableProvider, IVariableDescriptor
     {
         private const string KEY = "PathSeparator";
+        private static readonly string PathSeparator = new string(Path.DirectorySeparatorChar, 1);
 
         public bool CanProvide(string key)
         {
@@ -14,7 +16,12 @@
 
         public string Provide(Context context, string key, string arg)
         {
-            return new string(Path.DirectorySeparatorChar, 1);
+            return PathSeparator;
+        }
+
+        public IEnumerable<VariableDescription> Get()
+        {
+            yield return new VariableDescription(KEY, $"Path separator ({PathSeparator})");
         }
     }
 }

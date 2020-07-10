@@ -140,7 +140,6 @@
                     OutputFile = outputFilename,
                     Variables = variables,
                     ForceOutput = forceOutput,
-                    DryRun = createOptions.DryRun,
                     DefaultTimeFormat = defaultTimeFormat,
                     DefaultDateFormat = defaultDateFormat,
                     DefaultDateTimeFormat = defaultDateTimeFormat,
@@ -197,7 +196,7 @@
                                     new PathSeparatorVariableProvider(),
                                     new EmptyVariableProvider(),
                                     new EnvironmentVariableVariableProvider(stringFormatter),
-                                    new GitVariableProviderComposition(),
+                                    new GitVariableProviderComposition(dateTimeFormatter),
                                     new GitVersionVariableProviderComposition(dateTimeFormatter),
                                 };
 
@@ -223,9 +222,6 @@
             }
 
             IPdfGenerator generator = new WordInteropPdfGenerator(showAnimation:false, wordVisible:false, screenUpdating:false);
-
-            if (command.DryRun)
-                generator = new DryRunDecorator(generator);
 
             Console.WriteLine("OUTPUT filename: "+ outputFilename);
 

@@ -12,8 +12,6 @@
 
         public bool ForceOutput { get; set; }
 
-        public bool DryRun { get; set; }
-
         public string DefaultDateFormat { get; set; }
 
         public string DefaultTimeFormat{ get; set; }

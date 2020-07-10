@@ -1,13 +1,14 @@
 ﻿namespace Core.VariableProviders
 {
     using System;
+    using System.Collections.Generic;
 
     using Core.Formatters;
 
-    public class EnvironmentVariableVariableProvider : IVariableProvider
+    public class EnvironmentVariableVariableProvider : IVariableProvider, IVariableDescriptor
     {
         private readonly IStringFormatter _stringFormatter;
-        private const string PREFIX = "env.";
+        private const string PREFIX = "Env.";
 
         public EnvironmentVariableVariableProvider(IStringFormatter stringFormatter)
         {
@@ -39,6 +40,11 @@
             return string.IsNullOrWhiteSpace(arg)
                        ? result
                        : _stringFormatter.Format(result, arg);
+        }
+
+        public IEnumerable<VariableDescription> Get()
+        {
+            yield return new VariableDescription(PREFIX+"<name>", "Replace <name> with the environment variable you request.");
         }
     }
 }

@@ -46,7 +46,6 @@
                                                                         "GitVersion=v.{GitVersion.FullSemVer} -- Last commit {gitVersion.CommitDate}",
                                                                     },
                                           Force = false,
-                                          DryRun = true,
                                           OutputFilename = "{filepath}{PathSeparator}{now:yyyyMMddHHmmss}_{env.username:lower}_{filenamebase}.pdf",
                                           Filename = "C:\\Users\\coenm\\Documents\\MyDocument.docx",
                                       });

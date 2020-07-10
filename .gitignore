@@ -350,3 +350,4 @@ MigrationBackup/
 .ionide/
 src/PdfGenerator/costura32/
 src/PdfGenerator/costura64/
+example/*.pdf
