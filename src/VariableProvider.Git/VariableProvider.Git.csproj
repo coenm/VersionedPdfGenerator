@@ -4,6 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IncludeSymbolsInSingleFile>true</IncludeSymbolsInSingleFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0034" />
   </ItemGroup>
