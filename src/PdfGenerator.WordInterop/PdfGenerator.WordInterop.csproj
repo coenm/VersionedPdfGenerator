@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Word">
-      <HintPath>..\Microsoft.Office.Interop.Word.dll</HintPath>
+      <HintPath>lib\Microsoft.Office.Interop.Word.dll</HintPath>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
