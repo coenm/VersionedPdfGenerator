@@ -15,7 +15,6 @@
     using PdfGenerator.CommandLineOptions.Verbs;
     using PdfGenerator.Commands;
     using PdfGenerator.ConfigFile;
-    using PdfGenerator.WordInterop;
     using VariableProvider.Git;
     using VariableProvider.GitVersion;
     using YamlDotNet.Serialization;
@@ -24,11 +23,16 @@
     {
         private readonly IAbsolutePathService _absolutePathService;
         private readonly List<IDynamicConfigFileLocator> _configFileLocator;
+        private readonly IPdfGeneratorFactory _pdfGeneratorFactory;
 
-        public OptionsCreateCommandHandler(IAbsolutePathService absolutePathService, List<IDynamicConfigFileLocator> configFileLocator)
+        public OptionsCreateCommandHandler(
+            IAbsolutePathService absolutePathService,
+            List<IDynamicConfigFileLocator> configFileLocator,
+            IPdfGeneratorFactory pdfGeneratorFactory)
         {
             _absolutePathService = absolutePathService ?? throw new ArgumentNullException(nameof(absolutePathService));
             _configFileLocator = configFileLocator ?? throw new ArgumentNullException(nameof(configFileLocator));
+            _pdfGeneratorFactory = pdfGeneratorFactory ?? throw new ArgumentNullException(nameof(pdfGeneratorFactory));
         }
 
         public bool CanHandle(ICommandLineCommand command)
@@ -176,7 +180,7 @@
             return null;
         }
 
-        private static void Execute(CreateCommand command)
+        private void Execute(CreateCommand command)
         {
             var dateTimeFormatter = new ConfigurableDateTimeFormatter(
                                                                       command.DefaultDateTimeFormat,
@@ -226,8 +230,7 @@
             if (!command.ForceOutput && File.Exists(outputFilename))
                 return;
 
-            IPdfGenerator generator = new WordInteropPdfGenerator(showAnimation:false, wordVisible:false, screenUpdating:false);
-
+            var generator = _pdfGeneratorFactory.Create();
             generator.Generate(command.InputFile, outputFilename, docVars);
         }
 

@@ -2,12 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Threading.Tasks;
 
     using Core;
     using Core.Config;
     using PdfGenerator.CommandLineOptions;
     using PdfGenerator.CommandLineOptions.CommandHandlers;
     using PdfGenerator.CommandLineOptions.Verbs;
+    using PdfGenerator.WordInterop;
     using VariableProvider.Git.ConfigFileLocators;
 
     public class Program
@@ -31,9 +35,11 @@
 
             var absolutePathService = new AbsolutePathService();
 
+            var pfdGeneratorFactory = new WordInteropPdfGeneratorFactory();
+
             var commandLineCommandHandlers = new List<ICommandLineCommandHandler>
                                                  {
-                                                     new OptionsCreateCommandHandler(absolutePathService, configFileLocators),
+                                                     new OptionsCreateCommandHandler(absolutePathService, configFileLocators, pfdGeneratorFactory),
                                                      new OptionsGenerateConfigCommandHandler(),
                                                      new OptionsListAllVariablesCommandHandler(),
                                                  };
