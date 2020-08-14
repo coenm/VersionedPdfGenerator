@@ -353,3 +353,4 @@ src/PdfGenerator/costura64/
 example/*.pdf
 *.lnk
 Microsoft.Office.Interop.Word.dll
+*.diff
