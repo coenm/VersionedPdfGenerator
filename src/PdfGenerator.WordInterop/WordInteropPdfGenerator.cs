@@ -2,9 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Runtime.InteropServices;
 
     using Core;
     using Microsoft.Office.Interop.Word;
+
+    // https://dottutorials.net/programmatically-generate-word-files-using-interop-in-net-core/
 
     public class WordInteropPdfGenerator : IPdfGenerator
     {
@@ -31,11 +34,13 @@
             object oMissing = Missing.Value;
 
             // Cast as Object for word Open method
-            object filename = (object)wordDocumentFilename;
+            var filename = (object)wordDocumentFilename;
+            var readonlyMode = (object)true;
 
             // Use the dummy value as a placeholder for optional arguments
-            Document doc = wordApplication.Documents.Open(ref filename,
-                                                          ref oMissing, ref oMissing, ref oMissing,
+            Document doc = wordApplication.Documents.Open(
+                                                          ref filename,
+                                                          ref oMissing, ref readonlyMode, ref oMissing,
                                                           ref oMissing, ref oMissing, ref oMissing,
                                                           ref oMissing, ref oMissing, ref oMissing,
                                                           ref oMissing, ref oMissing, ref oMissing,
@@ -44,36 +49,52 @@
 
             foreach (var item in docVars)
             {
-                if (string.IsNullOrEmpty(item.Value))
-                    doc.Variables.Add(item.Key, " ");
-                else
-                    doc.Variables.Add(item.Key, item.Value);
+                doc.Variables.Add(item.Key, string.IsNullOrEmpty(item.Value) ? " " : item.Value);
             }
 
             UpdateFields(doc);
 
-            object outputFileName = outputPdfFilename;
-            object fileFormat = WdSaveFormat.wdFormatPDF;
+            try
+            {
+                doc.ExportAsFixedFormat(
+                                        outputPdfFilename,
+                                        WdExportFormat.wdExportFormatPDF,
+                                        false,
+                                        WdExportOptimizeFor.wdExportOptimizeForPrint,
+                                        WdExportRange.wdExportAllDocument,
+                                        1,
+                                        1,
+                                        WdExportItem.wdExportDocumentContent,
+                                        true,
+                                        true,
+                                        WdExportCreateBookmarks.wdExportCreateWordBookmarks);
+            }
+            catch
+            {
+                object outputFileName = outputPdfFilename;
+                object fileFormat = WdSaveFormat.wdFormatPDF;
 
-            // Save document into PDF Format
-            doc.SaveAs(ref outputFileName, ref fileFormat,
-                       ref oMissing, ref oMissing, ref oMissing,
-                       ref oMissing, ref oMissing, ref oMissing,
-                       ref oMissing, ref oMissing, ref oMissing,
-                       ref oMissing, ref oMissing, ref oMissing,
-                       ref oMissing, ref oMissing);
+                // Save document into PDF Format
+                doc.SaveAs(
+                           ref outputFileName, ref fileFormat,
+                           ref oMissing, ref oMissing, ref oMissing,
+                           ref oMissing, ref oMissing, ref oMissing,
+                           ref oMissing, ref oMissing, ref oMissing,
+                           ref oMissing, ref oMissing, ref oMissing,
+                           ref oMissing, ref oMissing);
+            }
 
             // Close the Word document, but leave the Word application open.
             // doc has to be cast to type _Document so that it will find the
             // correct Close method.
             object saveChanges = WdSaveOptions.wdDoNotSaveChanges;
             ((_Document)doc).Close(ref saveChanges, ref oMissing, ref oMissing);
-            doc = null;
 
             // word has to be cast to type _Application so that it will find
             // the correct Quit method.
             ((_Application)wordApplication).Quit(ref oMissing, ref oMissing, ref oMissing);
-            wordApplication = null;
+
+            Marshal.ReleaseComObject(doc);
         }
 
         private static void UpdateFields(Document doc)

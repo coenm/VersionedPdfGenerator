@@ -221,12 +221,12 @@
                 }
             }
 
-            IPdfGenerator generator = new WordInteropPdfGenerator(showAnimation:false, wordVisible:false, screenUpdating:false);
-
-            Console.WriteLine("OUTPUT filename: "+ outputFilename);
+            Console.WriteLine("OUTPUT filename: " + outputFilename);
 
             if (!command.ForceOutput && File.Exists(outputFilename))
                 return;
+
+            IPdfGenerator generator = new WordInteropPdfGenerator(showAnimation:false, wordVisible:false, screenUpdating:false);
 
             generator.Generate(command.InputFile, outputFilename, docVars);
         }
