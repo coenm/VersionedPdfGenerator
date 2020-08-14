@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
     using Core;
@@ -13,10 +12,12 @@
     using PdfGenerator.CommandLineOptions.Verbs;
     using PdfGenerator.WordInterop;
     using VariableProvider.Git.ConfigFileLocators;
+    using WebHost;
 
     public class Program
     {
-        static void Main(string[] args)
+        [STAThread]
+        public static async Task Main(string[] args)
         {
             var filenames = new[]
                                 {
@@ -47,32 +48,51 @@
             var compositeCommandLineCommandHandler = new CommandLineCommandHandlerComposition(commandLineCommandHandlers);
 
             ICommandLineCommand command = null;
-            try
-            {
-                command = CommandLineParser.Parse(args);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error occurred. Press enter to exit.");
-                Console.WriteLine(e);
-            }
 
-            if (command is null)
-            {
-                Console.ReadLine();
-                return;
-            }
+            var webHostModule = new WebHostModule();
 
             try
             {
-                compositeCommandLineCommandHandler.Handle(command);
-                Console.WriteLine("Done.Press enter to exit.");
+                await webHostModule.InitializeAsync();
+                _ = webHostModule.StartAsync();
+                var variableProviders = webHostModule.CreateVariableProviders().ToList();
+
+                // var value = variableProviders.First().Provide(new Context(), "", "");
+
+                try
+                {
+                    command = CommandLineParser.Parse(args);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occurred. Press enter to exit.");
+                    Console.WriteLine(e);
+                }
+
+                if (command is null)
+                {
+                    Console.ReadLine();
+                    return;
+                }
+
+                try
+                {
+                    compositeCommandLineCommandHandler.Handle(command);
+                    Console.WriteLine("Done.Press enter to exit.");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occurred. Press enter to exit.");
+                    Console.WriteLine(e);
+                }
             }
-            catch (Exception e)
+            finally
             {
-                Console.WriteLine("Error occurred. Press enter to exit.");
-                Console.WriteLine(e);
+                await webHostModule.StopAsync();
             }
+
+            Console.WriteLine("Press enter to exit.");
+            Console.ReadLine();
         }
     }
 }
