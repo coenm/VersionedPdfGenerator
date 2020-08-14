@@ -75,6 +75,7 @@
         [InlineData("{env.OS:lower}",        "[windows_nt]")]
         [InlineData("{env.OS:upper}",        "[WINDOWS_NT]")]
         [InlineData("{env.OS}",              "[Windows_NT]")]
+        [InlineData("http://www.google.com:8000", "[http://www.google.com:8000]")]
         public void Parse(string input, string expectedOutput)
         {
             // arrange
