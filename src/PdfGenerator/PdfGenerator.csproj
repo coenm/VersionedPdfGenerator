@@ -21,6 +21,7 @@
     <ProjectReference Include="..\PdfGenerator.WordInterop\PdfGenerator.WordInterop.csproj" />
     <ProjectReference Include="..\VariableProvider.GitVersion\VariableProvider.GitVersion.csproj" />
     <ProjectReference Include="..\VariableProvider.Git\VariableProvider.Git.csproj" />
+    <ProjectReference Include="..\WebHost\WebHost.csproj" />
   </ItemGroup>
 
 </Project>
