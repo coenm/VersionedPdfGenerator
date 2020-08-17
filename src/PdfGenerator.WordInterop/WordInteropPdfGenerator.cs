@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Threading;
 
     using Core;
     using Microsoft.Office.Interop.Word;
@@ -45,6 +46,10 @@
                                                           ref oMissing, ref oMissing, ref oMissing,
                                                           ref oMissing, ref oMissing, ref oMissing,
                                                           ref oMissing, ref oMissing, ref oMissing);
+
+            // temp stupid workaround.
+            Thread.Sleep(5000);
+
             doc.Activate();
 
             foreach (var item in docVars)

@@ -2,17 +2,23 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     using Core;
     using Core.Config;
+    using Core.VariableProviders;
     using PdfGenerator.CommandLineOptions;
     using PdfGenerator.CommandLineOptions.CommandHandlers;
     using PdfGenerator.CommandLineOptions.Verbs;
+    using PdfGenerator.WordInterop;
     using VariableProvider.Git.ConfigFileLocators;
+    using WebHost;
 
     public class Program
     {
-        static void Main(string[] args)
+        [STAThread]
+        public static async Task Main(string[] args)
         {
             var filenames = new[]
                                 {
@@ -31,42 +37,73 @@
 
             var absolutePathService = new AbsolutePathService();
 
-            var commandLineCommandHandlers = new List<ICommandLineCommandHandler>
-                                                 {
-                                                     new OptionsCreateCommandHandler(absolutePathService, configFileLocators),
-                                                     new OptionsGenerateConfigCommandHandler(),
-                                                     new OptionsListAllVariablesCommandHandler(),
-                                                 };
+            var pfdGeneratorFactory = new WordInteropPdfGeneratorFactory();
 
-            var compositeCommandLineCommandHandler = new CommandLineCommandHandlerComposition(commandLineCommandHandlers);
-
-            ICommandLineCommand command = null;
+            var enabledModules = new List<IModule>
+                                     {
+                                         new WebHostModule(),
+                                     };
             try
             {
-                command = CommandLineParser.Parse(args);
+                foreach (var module in enabledModules)
+                    await module.InitializeAsync();
+
+                foreach (var module in enabledModules)
+                    await module.StartAsync();
+
+                ICommandLineCommand command = null;
+
+                try
+                {
+                    command = CommandLineParser.Parse(args);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occurred. Press enter to exit.");
+                    Console.WriteLine(e);
+                }
+
+                if (command is null)
+                {
+                    Console.ReadLine();
+                    return;
+                }
+
+                var moduleVariableProviders = enabledModules.SelectMany(x => x.CreateVariableProviders()).ToList();
+                var moduleVariableDescriptors = moduleVariableProviders
+                                                .Select(x => x as IVariableDescriptor)
+                                                .Where(x => x != null)
+                                                .ToList();
+
+                var commandLineCommandHandlers = new List<ICommandLineCommandHandler>
+                                                     {
+                                                         new OptionsCreateCommandHandler(absolutePathService, configFileLocators, pfdGeneratorFactory, moduleVariableProviders),
+                                                         new OptionsGenerateConfigCommandHandler(),
+                                                         new OptionsListAllVariablesCommandHandler(moduleVariableDescriptors),
+                                                     };
+
+                var compositeCommandLineCommandHandler = new CommandLineCommandHandlerComposition(commandLineCommandHandlers);
+
+
+                try
+                {
+                    compositeCommandLineCommandHandler.Handle(command);
+                    Console.WriteLine("Done.Press enter to exit.");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occurred. Press enter to exit.");
+                    Console.WriteLine(e);
+                }
             }
-            catch (Exception e)
+            finally
             {
-                Console.WriteLine("Error occurred. Press enter to exit.");
-                Console.WriteLine(e);
+                foreach (var module in enabledModules)
+                    await module.StopAsync();
             }
 
-            if (command is null)
-            {
-                Console.ReadLine();
-                return;
-            }
-
-            try
-            {
-                compositeCommandLineCommandHandler.Handle(command);
-                Console.WriteLine("Done.Press enter to exit.");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error occurred. Press enter to exit.");
-                Console.WriteLine(e);
-            }
+            Console.WriteLine("Press enter to exit.");
+            Console.ReadLine();
         }
     }
 }

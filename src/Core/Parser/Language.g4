@@ -22,8 +22,9 @@ fragment WS         : ' ' ;
 fragment DOT        : '.' ;
 fragment MINUS      : '-' ;
 fragment SEMICOLUMN : ':' ;
+fragment SLASH      : '/' ;
 
 KEY                 : LETTER(LETTER|DIGIT|UNDERSCORE|DOT|MINUS)+ ;
-TEXT                :       (LETTER|DIGIT|UNDERSCORE|DOT|MINUS|WS)+;
+TEXT                :       (LETTER|DIGIT|UNDERSCORE|DOT|MINUS|WS|SLASH)+;
 NEWLINE             : ('\r'? '\n' | '\r') -> channel(HIDDEN) ;
 WHITESPACE          : (' ' | '\t' ) -> channel(HIDDEN) ;

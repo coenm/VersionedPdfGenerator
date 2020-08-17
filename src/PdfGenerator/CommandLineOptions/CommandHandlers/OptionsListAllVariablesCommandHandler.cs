@@ -15,6 +15,13 @@
 
     public class OptionsListAllVariablesCommandHandler : ICommandLineCommandHandler
     {
+        private readonly List<IVariableDescriptor> _moduleVariableProviders;
+
+        public OptionsListAllVariablesCommandHandler(List<IVariableDescriptor> moduleVariableProviders)
+        {
+            _moduleVariableProviders = moduleVariableProviders ?? new List<IVariableDescriptor>(0);
+        }
+
         public bool CanHandle(ICommandLineCommand command)
         {
             return command is ListAllVariableOptions;
@@ -28,7 +35,7 @@
             Execute(new ListVariablesCommand());
         }
 
-        private static void Execute(ListVariablesCommand command)
+        private void Execute(ListVariablesCommand command)
         {
             var dateTimeFormatter = new ConfigurableDateTimeFormatter(string.Empty, string.Empty, string.Empty);
             var stringFormatter = new StringFormatter();
@@ -48,6 +55,7 @@
                                     new GitVariableProviderComposition(dateTimeFormatter),
                                     new GitVersionVariableProviderComposition(dateTimeFormatter),
                                 };
+            providers.AddRange(_moduleVariableProviders);
 
             var maxKeyLength = providers.SelectMany(x => x.Get()).Select(x => x.Key.Length).Max();
 
