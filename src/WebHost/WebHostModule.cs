@@ -10,7 +10,7 @@ namespace WebHost
     using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.Extensions.Hosting;
 
-    public class WebHostModule : IModule, IVariableProviderFactory
+    public class WebHostModule : IModule
     {
         private IHost _host;
 
@@ -23,7 +23,8 @@ namespace WebHost
 
         public Task StartAsync()
         {
-            return _host.RunAsync();
+            _  = _host.RunAsync();
+            return Task.CompletedTask;
         }
 
         public Task StopAsync()

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     using Antlr4.Runtime;
     using Core;
@@ -24,15 +25,17 @@
         private readonly IAbsolutePathService _absolutePathService;
         private readonly List<IDynamicConfigFileLocator> _configFileLocator;
         private readonly IPdfGeneratorFactory _pdfGeneratorFactory;
+        private readonly List<IVariableProvider> _moduleVariableProviders;
 
-        public OptionsCreateCommandHandler(
-            IAbsolutePathService absolutePathService,
-            List<IDynamicConfigFileLocator> configFileLocator,
-            IPdfGeneratorFactory pdfGeneratorFactory)
+        public OptionsCreateCommandHandler(IAbsolutePathService absolutePathService,
+                                           List<IDynamicConfigFileLocator> configFileLocator,
+                                           IPdfGeneratorFactory pdfGeneratorFactory,
+                                           List<IVariableProvider> moduleVariableProviders)
         {
             _absolutePathService = absolutePathService ?? throw new ArgumentNullException(nameof(absolutePathService));
             _configFileLocator = configFileLocator ?? throw new ArgumentNullException(nameof(configFileLocator));
             _pdfGeneratorFactory = pdfGeneratorFactory ?? throw new ArgumentNullException(nameof(pdfGeneratorFactory));
+            _moduleVariableProviders = moduleVariableProviders ?? throw new ArgumentNullException(nameof(moduleVariableProviders));
         }
 
         public bool CanHandle(ICommandLineCommand command)
@@ -202,7 +205,9 @@
                                     new EnvironmentVariableVariableProvider(stringFormatter),
                                     new GitVariableProviderComposition(dateTimeFormatter),
                                     new GitVersionVariableProviderComposition(dateTimeFormatter),
-                                };
+                                }
+                            .Concat(_moduleVariableProviders)
+                            .ToList();
 
             var ctx = new Context(DateTime.Now, command.InputFile);
 

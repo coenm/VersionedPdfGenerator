@@ -12,7 +12,7 @@
     internal class WebHostVariableProvider : IVariableProvider, IVariableDescriptor
     {
         private readonly IServer _server;
-        private const string KEY = "HostUrl";
+        private const string KEY = "Host";
 
         internal WebHostVariableProvider(IServer server)
         {
@@ -34,7 +34,10 @@
             if (addresses == null || addresses.Length == 0)
                 return string.Empty;
 
-            return addresses[0];
+            var result = addresses[0];
+            if (result.EndsWith("/"))
+                return result;
+            return result + "/";
         }
 
         public IEnumerable<VariableDescription> Get()

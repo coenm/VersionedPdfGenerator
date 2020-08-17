@@ -3,7 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
-    public interface IModule : IDisposable
+    public interface IModule : IVariableProviderFactory, IDisposable
     {
         Task InitializeAsync();
 

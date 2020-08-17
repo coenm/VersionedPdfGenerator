@@ -60,3 +60,4 @@ DocVariables:
   GitVersion.WeightedPreReleaseNumber: '{GitVersion.WeightedPreReleaseNumber}'
   CustomVersionInfo: 'Version: {GitVersion.FullSemVer} committed on {Git.Author.CommitDate:yyyyMMdd} by {Git.Author.Name}.'
   CustomRenderDate: 'Copyright 2010-{now:yyyy}.'
+  Host: '{Host}'

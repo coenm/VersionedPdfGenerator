@@ -7,6 +7,7 @@
 
     using Core;
     using Core.Config;
+    using Core.VariableProviders;
     using PdfGenerator.CommandLineOptions;
     using PdfGenerator.CommandLineOptions.CommandHandlers;
     using PdfGenerator.CommandLineOptions.Verbs;
@@ -38,26 +39,19 @@
 
             var pfdGeneratorFactory = new WordInteropPdfGeneratorFactory();
 
-            var commandLineCommandHandlers = new List<ICommandLineCommandHandler>
-                                                 {
-                                                     new OptionsCreateCommandHandler(absolutePathService, configFileLocators, pfdGeneratorFactory),
-                                                     new OptionsGenerateConfigCommandHandler(),
-                                                     new OptionsListAllVariablesCommandHandler(),
-                                                 };
-
-            var compositeCommandLineCommandHandler = new CommandLineCommandHandlerComposition(commandLineCommandHandlers);
-
-            ICommandLineCommand command = null;
-
-            var webHostModule = new WebHostModule();
-
+            var enabledModules = new List<IModule>
+                                     {
+                                         new WebHostModule(),
+                                     };
             try
             {
-                await webHostModule.InitializeAsync();
-                _ = webHostModule.StartAsync();
-                var variableProviders = webHostModule.CreateVariableProviders().ToList();
+                foreach (var module in enabledModules)
+                    await module.InitializeAsync();
 
-                // var value = variableProviders.First().Provide(new Context(), "", "");
+                foreach (var module in enabledModules)
+                    await module.StartAsync();
+
+                ICommandLineCommand command = null;
 
                 try
                 {
@@ -75,6 +69,22 @@
                     return;
                 }
 
+                var moduleVariableProviders = enabledModules.SelectMany(x => x.CreateVariableProviders()).ToList();
+                var moduleVariableDescriptors = moduleVariableProviders
+                                                .Select(x => x as IVariableDescriptor)
+                                                .Where(x => x != null)
+                                                .ToList();
+
+                var commandLineCommandHandlers = new List<ICommandLineCommandHandler>
+                                                     {
+                                                         new OptionsCreateCommandHandler(absolutePathService, configFileLocators, pfdGeneratorFactory, moduleVariableProviders),
+                                                         new OptionsGenerateConfigCommandHandler(),
+                                                         new OptionsListAllVariablesCommandHandler(moduleVariableDescriptors),
+                                                     };
+
+                var compositeCommandLineCommandHandler = new CommandLineCommandHandlerComposition(commandLineCommandHandlers);
+
+
                 try
                 {
                     compositeCommandLineCommandHandler.Handle(command);
@@ -88,7 +98,8 @@
             }
             finally
             {
-                await webHostModule.StopAsync();
+                foreach (var module in enabledModules)
+                    await module.StopAsync();
             }
 
             Console.WriteLine("Press enter to exit.");
