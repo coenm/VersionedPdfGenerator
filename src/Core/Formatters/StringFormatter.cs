@@ -7,11 +7,12 @@
         private StringFormatter()
         {
         }
+
         public static StringFormatter Instance { get; }  = new StringFormatter();
 
         public string Format(string input, string arg)
         {
-            if (string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrEmpty(input))
                 return input;
 
             if (string.IsNullOrWhiteSpace(arg))
