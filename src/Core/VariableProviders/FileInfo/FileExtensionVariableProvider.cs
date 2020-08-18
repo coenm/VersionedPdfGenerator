@@ -5,7 +5,7 @@
 
     using Core.Formatters;
 
-    public class FileExtensionVariableProvider : IVariableProvider, IVariableDescriptor
+    public class FileExtensionVariableProvider : IVariableProvider
     {
         private const string KEY = "FileExtension";
         private readonly IStringFormatter _stringFormatterComposition;

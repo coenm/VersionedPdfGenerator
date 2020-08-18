@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class EmptyVariableProvider : IVariableProvider, IVariableDescriptor
+    public class EmptyVariableProvider : IVariableProvider
     {
         private const string KEY = "empty";
 

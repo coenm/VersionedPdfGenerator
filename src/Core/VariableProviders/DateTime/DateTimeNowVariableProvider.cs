@@ -6,7 +6,7 @@
 
     using Core.Formatters;
 
-    public class DateTimeNowVariableProvider : IVariableProvider, IVariableDescriptor
+    public class DateTimeNowVariableProvider : IVariableProvider
     {
         private const string KEY = "Now";
         private readonly IDateTimeFormatter _formatter;

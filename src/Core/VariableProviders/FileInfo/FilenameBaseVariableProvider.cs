@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
 
-    public class FilenameBaseVariableProvider : IVariableProvider, IVariableDescriptor
+    public class FilenameBaseVariableProvider : IVariableProvider
     {
         private const string KEY = "FilenameBase";
 

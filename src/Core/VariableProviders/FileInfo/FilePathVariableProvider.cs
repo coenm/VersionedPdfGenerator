@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class FilePathVariableProvider : IVariableProvider, IVariableDescriptor
+    public class FilePathVariableProvider : IVariableProvider
     {
         private const string KEY = "FilePath";
 

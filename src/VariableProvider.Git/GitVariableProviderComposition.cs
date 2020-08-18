@@ -12,7 +12,7 @@
     using VariableProvider.Git.VariableProviders.Author;
     using VariableProvider.Git.VariableProviders.Committer;
 
-    public class GitVariableProviderComposition : IVariableProvider, IVariableDescriptor
+    internal class GitVariableProviderComposition : IVariableProvider
     {
         private const string PREFIX = "Git.";
 

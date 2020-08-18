@@ -10,11 +10,11 @@
 
     public class OptionsListAllVariablesCommandHandler : ICommandLineCommandHandler
     {
-        private readonly List<IVariableDescriptor> _variableProvider;
+        private readonly List<IVariableProvider> _variableProvider;
 
-        public OptionsListAllVariablesCommandHandler(List<IVariableDescriptor> moduleVariableProviders)
+        public OptionsListAllVariablesCommandHandler(List<IVariableProvider> variableProviders)
         {
-            _variableProvider = moduleVariableProviders ?? new List<IVariableDescriptor>(0);
+            _variableProvider = variableProviders ?? new List<IVariableProvider>(0);
         }
 
         public bool CanHandle(ICommandLineCommand command)

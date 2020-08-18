@@ -10,7 +10,7 @@
     using LibGit2Sharp;
     using VariableProvider.GitVersion.Providers;
 
-    public class GitVersionVariableProviderComposition : IVariableProvider, IVariableDescriptor
+    internal class GitVersionVariableProviderComposition : IVariableProvider
     {
         private const string PREFIX = "GitVersion.";
 

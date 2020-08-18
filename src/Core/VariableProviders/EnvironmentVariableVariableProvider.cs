@@ -5,7 +5,7 @@
 
     using Core.Formatters;
 
-    public class EnvironmentVariableVariableProvider : IVariableProvider, IVariableDescriptor
+    public class EnvironmentVariableVariableProvider : IVariableProvider
     {
         private readonly IStringFormatter _stringFormatter;
         private const string PREFIX = "Env.";

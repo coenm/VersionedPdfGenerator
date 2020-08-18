@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.AspNetCore.Hosting.Server.Features;
 
-    internal class WebHostVariableProvider : IVariableProvider, IVariableDescriptor
+    internal class WebHostVariableProvider : IVariableProvider
     {
         private readonly IServer _server;
         private const string KEY = "Host";

@@ -5,7 +5,7 @@
 
     using Core.Formatters;
 
-    public class DateTimeDateVariableProvider : IVariableProvider, IVariableDescriptor
+    public class DateTimeDateVariableProvider : IVariableProvider
     {
         private const string KEY = "Date";
         private readonly IDateTimeFormatter _formatter;

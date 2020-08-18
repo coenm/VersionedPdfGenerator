@@ -36,9 +36,8 @@
                                  new PathSeparatorVariableProvider(),
                                  new EmptyVariableProvider(),
                                  new EnvironmentVariableVariableProvider(StringFormatter.Instance),
-                                 new GitVariableProviderComposition(DateTimeFormatter.Instance),
-                                 new GitVersionVariableProviderComposition(DateTimeFormatter.Instance),
                              };
+
             _providers.AddRange(new GitModule(DateTimeFormatter.Instance).CreateVariableProviders());
             _providers.AddRange(new GitVersionModule(DateTimeFormatter.Instance).CreateVariableProviders());
         }

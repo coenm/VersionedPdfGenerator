@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class FilenameVariableProvider : IVariableProvider, IVariableDescriptor
+    public class FilenameVariableProvider : IVariableProvider
     {
         private const string KEY = "Filename";
 

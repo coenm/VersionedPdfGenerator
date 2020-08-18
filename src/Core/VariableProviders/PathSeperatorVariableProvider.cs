@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
 
-    public class PathSeparatorVariableProvider : IVariableProvider, IVariableDescriptor
+    public class PathSeparatorVariableProvider : IVariableProvider
     {
         private const string KEY = "PathSeparator";
         private static readonly string PathSeparator = new string(Path.DirectorySeparatorChar, 1);

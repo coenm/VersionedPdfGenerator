@@ -96,7 +96,7 @@
                                                      {
                                                          new OptionsCreateCommandHandler(absolutePathService, configFileLocators, pfdGeneratorFactory, providers),
                                                          new OptionsGenerateConfigCommandHandler(),
-                                                         new OptionsListAllVariablesCommandHandler(providers.Select(x => x as IVariableDescriptor).Where(x => x != null).ToList()),
+                                                         new OptionsListAllVariablesCommandHandler(providers),
                                                      };
 
                 var compositeCommandLineCommandHandler = new CommandLineCommandHandlerComposition(commandLineCommandHandlers);
