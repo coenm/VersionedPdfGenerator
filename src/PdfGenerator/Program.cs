@@ -84,7 +84,6 @@
 
                 var compositeCommandLineCommandHandler = new CommandLineCommandHandlerComposition(commandLineCommandHandlers);
 
-
                 try
                 {
                     compositeCommandLineCommandHandler.Handle(command);

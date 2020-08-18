@@ -15,7 +15,7 @@
 
         public IEnumerable<string> Locate(string inputFilename)
         {
-            var result =new List<string>();
+            var result = new List<string>();
 
             try
             {
@@ -26,9 +26,9 @@
                     result.Add(Path.Combine(dir, filename));
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                //
+                // ignore
             }
 
             return result;

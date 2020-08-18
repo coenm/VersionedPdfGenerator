@@ -52,25 +52,7 @@
             if (inputFilename == null)
                 throw new Exception("Could not find input file");
 
-            Config config = null;
-
-            if (!string.IsNullOrWhiteSpace(createOptions.ConfigFile))
-            {
-                var filename = createOptions.ConfigFile;
-                config = LoadConfig(filename);
-            }
-
-            if (config == null)
-            {
-                // find other config file and load.
-                foreach (var configFileLocator in _configFileLocator)
-                {
-                    foreach (var f in configFileLocator.Locate(inputFilename))
-                    {
-                        config ??= LoadConfig(f);
-                    }
-                }
-            }
+            var config = TryLoadConfig(createOptions.ConfigFile);
 
             var variables = new Dictionary<string, string>();
             string outputFilename = null;
@@ -155,34 +137,6 @@
             Execute(createCommand);
         }
 
-        private static Config LoadConfig(string filename)
-        {
-            var fullConfigFilename = string.Empty;
-
-            if (File.Exists(filename))
-            {
-                var result = new FileInfo(filename);
-                fullConfigFilename = result.FullName;
-            }
-
-            if (string.IsNullOrWhiteSpace(fullConfigFilename))
-                return null;
-
-            try
-            {
-                using var fileStream = new FileStream(fullConfigFilename, FileMode.Open);
-                using var reader = new StreamReader(fileStream);
-                var deserializer = new Deserializer();
-                return deserializer.Deserialize<Config>(reader);
-            }
-            catch (Exception)
-            {
-                // do nothing.
-            }
-
-            return null;
-        }
-
         private void Execute(CreateCommand command)
         {
             var dateTimeFormatter = new ConfigurableDateTimeFormatter(
@@ -237,6 +191,59 @@
 
             var generator = _pdfGeneratorFactory.Create();
             generator.Generate(command.InputFile, outputFilename, docVars);
+        }
+
+        private Config TryLoadConfig(string inputConfigFilename)
+        {
+            Config config = null;
+
+            if (!string.IsNullOrWhiteSpace(inputConfigFilename))
+            {
+                var filename = inputConfigFilename;
+                config = TryLoadConfigFromFile(filename);
+            }
+
+            if (config == null)
+            {
+                // find other config file and load.
+                foreach (var configFileLocator in _configFileLocator)
+                {
+                    foreach (var f in configFileLocator.Locate(inputConfigFilename))
+                    {
+                        config ??= TryLoadConfigFromFile(f);
+                    }
+                }
+            }
+
+            return config;
+        }
+
+        private static Config TryLoadConfigFromFile(string filename)
+        {
+            var fullConfigFilename = string.Empty;
+
+            if (File.Exists(filename))
+            {
+                var result = new FileInfo(filename);
+                fullConfigFilename = result.FullName;
+            }
+
+            if (string.IsNullOrWhiteSpace(fullConfigFilename))
+                return null;
+
+            try
+            {
+                using var fileStream = new FileStream(fullConfigFilename, FileMode.Open);
+                using var reader = new StreamReader(fileStream);
+                var deserializer = new Deserializer();
+                return deserializer.Deserialize<Config>(reader);
+            }
+            catch (Exception)
+            {
+                // do nothing.
+            }
+
+            return null;
         }
 
         private static LanguageParser.ExpressionContext GetExpressionContext(string input)
