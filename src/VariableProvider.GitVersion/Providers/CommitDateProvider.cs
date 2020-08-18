@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    using Core;
     using Core.Formatters;
     using global::GitVersion;
     using global::GitVersion.OutputVariables;
@@ -17,18 +18,15 @@
             _dateTimeFormatter = dateTimeFormatter ?? throw new ArgumentNullException(nameof(dateTimeFormatter));
         }
 
-        public bool CanProvide(SemanticVersion semanticVersion, VersionVariables versionVariables, string key, string arg)
+        public bool CanProvide(SemanticVersion semanticVersion, VersionVariables versionVariables, Context context, string key, string arg)
         {
             return KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase) && !(semanticVersion?.BuildMetaData?.CommitDate is null);
         }
 
-        public string Provide(SemanticVersion semanticVersion, VersionVariables versionVariables, string key, string arg)
+        public string Provide(SemanticVersion semanticVersion, VersionVariables versionVariables, Context context, string key, string arg)
         {
-            // todo
             var dt = semanticVersion.BuildMetaData.CommitDate.DateTime;
-            if (string.IsNullOrWhiteSpace(arg))
-                return _dateTimeFormatter.FormatDateTime(dt);
-            return dt.ToString(arg);
+            return _dateTimeFormatter.FormatDateTime(dt, context, arg);
         }
 
         public IEnumerable<GitVersionVariableDescription> Get()

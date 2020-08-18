@@ -74,7 +74,7 @@
                 var provider = _gitProviders.FirstOrDefault(p => p.CanProvide(gitVariableKey));
                 return provider is null
                            ? string.Empty
-                           : provider.Provide(repo, gitVariableKey, arg);
+                           : provider.Provide(repo, context, gitVariableKey, arg);
             }
         }
 

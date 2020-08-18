@@ -2,10 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
 
+    using Core;
     using Core.Formatters;
-
     using LibGit2Sharp;
 
     internal class CommitterWhenProvider : IGitVariableProvider, IGitVariableDescriptor
@@ -24,15 +23,13 @@
             return KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public string Provide(IRepository repo, string key, string arg)
+        public string Provide(IRepository repo, Context context, string key, string arg)
         {
             var dt = repo?.Head?.Tip?.Committer?.When.DateTime;
             if (dt.HasValue == false)
                 return string.Empty;
 
-            if (string.IsNullOrWhiteSpace(arg))
-                return _dateTimeFormatter.FormatDateTime(dt.Value);
-            return dt.Value.ToString(arg, CultureInfo.CurrentUICulture);
+            return _dateTimeFormatter.FormatDateTime(dt.Value, context, arg);
         }
 
         public IEnumerable<GitVariableDescription> Get()

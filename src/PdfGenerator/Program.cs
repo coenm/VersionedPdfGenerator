@@ -7,12 +7,17 @@
 
     using Core;
     using Core.Config;
+    using Core.Formatters;
     using Core.VariableProviders;
+    using Core.VariableProviders.DateTime;
+    using Core.VariableProviders.FileInfo;
     using PdfGenerator.CommandLineOptions;
     using PdfGenerator.CommandLineOptions.CommandHandlers;
     using PdfGenerator.CommandLineOptions.Verbs;
     using PdfGenerator.WordInterop;
+    using VariableProvider.Git;
     using VariableProvider.Git.ConfigFileLocators;
+    using VariableProvider.GitVersion;
     using WebHost;
 
     public class Program
@@ -41,6 +46,8 @@
 
             var enabledModules = new List<IModule>
                                      {
+                                         new GitModule(DateTimeFormatter.Instance),
+                                         new GitVersionModule(DateTimeFormatter.Instance),
                                          new WebHostModule(),
                                      };
             try
@@ -69,17 +76,27 @@
                     return;
                 }
 
-                var moduleVariableProviders = enabledModules.SelectMany(x => x.CreateVariableProviders()).ToList();
-                var moduleVariableDescriptors = moduleVariableProviders
-                                                .Select(x => x as IVariableDescriptor)
-                                                .Where(x => x != null)
-                                                .ToList();
+                var moduleVariableProviders = enabledModules.SelectMany(x => x.CreateVariableProviders());
+                var providers = new List<IVariableProvider>
+                                    {
+                                        new DateTimeNowVariableProvider(DateTimeFormatter.Instance),
+                                        new DateTimeTimeVariableProvider(DateTimeFormatter.Instance),
+                                        new DateTimeDateVariableProvider(DateTimeFormatter.Instance),
+                                        new FilenameBaseVariableProvider(),
+                                        new FilenameVariableProvider(),
+                                        new FilePathVariableProvider(),
+                                        new FileExtensionVariableProvider(StringFormatter.Instance),
+                                        new PathSeparatorVariableProvider(),
+                                        new EmptyVariableProvider(),
+                                        new EnvironmentVariableVariableProvider(StringFormatter.Instance),
+                                    };
+                providers.AddRange(moduleVariableProviders);
 
                 var commandLineCommandHandlers = new List<ICommandLineCommandHandler>
                                                      {
-                                                         new OptionsCreateCommandHandler(absolutePathService, configFileLocators, pfdGeneratorFactory, moduleVariableProviders),
+                                                         new OptionsCreateCommandHandler(absolutePathService, configFileLocators, pfdGeneratorFactory, providers),
                                                          new OptionsGenerateConfigCommandHandler(),
-                                                         new OptionsListAllVariablesCommandHandler(moduleVariableDescriptors),
+                                                         new OptionsListAllVariablesCommandHandler(providers.Select(x => x as IVariableDescriptor).Where(x => x != null).ToList()),
                                                      };
 
                 var compositeCommandLineCommandHandler = new CommandLineCommandHandlerComposition(commandLineCommandHandlers);

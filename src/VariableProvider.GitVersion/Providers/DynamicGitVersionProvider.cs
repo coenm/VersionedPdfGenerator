@@ -4,12 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Core;
+
     using global::GitVersion;
     using global::GitVersion.OutputVariables;
 
     internal class DynamicGitVersionProvider : IGitVersionVariableProvider, IGitVersionVariableDescriptor
     {
-        public bool CanProvide(SemanticVersion semanticVersion, VersionVariables versionVariables, string key, string arg)
+        public bool CanProvide(SemanticVersion semanticVersion, VersionVariables versionVariables, Context context, string key, string arg)
         {
             if (versionVariables is null)
                 return false;
@@ -23,7 +25,7 @@
             return !string.IsNullOrWhiteSpace(foundKey);
         }
 
-        public string Provide(SemanticVersion semanticVersion, VersionVariables versionVariables, string key, string arg)
+        public string Provide(SemanticVersion semanticVersion, VersionVariables versionVariables, Context context, string key, string arg)
         {
             var foundKey = VersionVariables.AvailableVariables.FirstOrDefault(item => key.Equals(item, StringComparison.CurrentCultureIgnoreCase));
             return versionVariables[foundKey];

@@ -4,22 +4,17 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Core.Formatters;
     using Core.VariableProviders;
-    using Core.VariableProviders.DateTime;
-    using Core.VariableProviders.FileInfo;
     using PdfGenerator.CommandLineOptions.Verbs;
     using PdfGenerator.Commands;
-    using VariableProvider.Git;
-    using VariableProvider.GitVersion;
 
     public class OptionsListAllVariablesCommandHandler : ICommandLineCommandHandler
     {
-        private readonly List<IVariableDescriptor> _moduleVariableProviders;
+        private readonly List<IVariableDescriptor> _variableProvider;
 
         public OptionsListAllVariablesCommandHandler(List<IVariableDescriptor> moduleVariableProviders)
         {
-            _moduleVariableProviders = moduleVariableProviders ?? new List<IVariableDescriptor>(0);
+            _variableProvider = moduleVariableProviders ?? new List<IVariableDescriptor>(0);
         }
 
         public bool CanHandle(ICommandLineCommand command)
@@ -37,29 +32,9 @@
 
         private void Execute(ListVariablesCommand command)
         {
-            var dateTimeFormatter = new ConfigurableDateTimeFormatter(string.Empty, string.Empty, string.Empty);
-            var stringFormatter = new StringFormatter();
+            var maxKeyLength = _variableProvider.SelectMany(x => x.Get()).Select(x => x.Key.Length).Max();
 
-            var providers = new List<IVariableDescriptor>
-                                {
-                                    new DateTimeNowVariableProvider(dateTimeFormatter),
-                                    new DateTimeTimeVariableProvider(dateTimeFormatter),
-                                    new DateTimeDateVariableProvider(dateTimeFormatter),
-                                    new FilenameBaseVariableProvider(),
-                                    new FilenameVariableProvider(),
-                                    new FilePathVariableProvider(),
-                                    new FileExtensionVariableProvider(stringFormatter),
-                                    new PathSeparatorVariableProvider(),
-                                    new EmptyVariableProvider(),
-                                    new EnvironmentVariableVariableProvider(stringFormatter),
-                                    new GitVariableProviderComposition(dateTimeFormatter),
-                                    new GitVersionVariableProviderComposition(dateTimeFormatter),
-                                };
-            providers.AddRange(_moduleVariableProviders);
-
-            var maxKeyLength = providers.SelectMany(x => x.Get()).Select(x => x.Key.Length).Max();
-
-            foreach (var provider in providers)
+            foreach (var provider in _variableProvider)
             {
                 foreach (var description in provider.Get())
                 {

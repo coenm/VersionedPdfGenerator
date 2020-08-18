@@ -3,21 +3,15 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
 
     using Antlr4.Runtime;
     using Core;
     using Core.Config;
-    using Core.Formatters;
     using Core.Parser;
     using Core.VariableProviders;
-    using Core.VariableProviders.DateTime;
-    using Core.VariableProviders.FileInfo;
     using PdfGenerator.CommandLineOptions.Verbs;
     using PdfGenerator.Commands;
     using PdfGenerator.ConfigFile;
-    using VariableProvider.Git;
-    using VariableProvider.GitVersion;
     using YamlDotNet.Serialization;
 
     public class OptionsCreateCommandHandler : ICommandLineCommandHandler
@@ -25,17 +19,18 @@
         private readonly IAbsolutePathService _absolutePathService;
         private readonly List<IDynamicConfigFileLocator> _configFileLocator;
         private readonly IPdfGeneratorFactory _pdfGeneratorFactory;
-        private readonly List<IVariableProvider> _moduleVariableProviders;
+        private readonly List<IVariableProvider> _variableProviders;
 
-        public OptionsCreateCommandHandler(IAbsolutePathService absolutePathService,
-                                           List<IDynamicConfigFileLocator> configFileLocator,
-                                           IPdfGeneratorFactory pdfGeneratorFactory,
-                                           List<IVariableProvider> moduleVariableProviders)
+        public OptionsCreateCommandHandler(
+            IAbsolutePathService absolutePathService,
+            List<IDynamicConfigFileLocator> configFileLocator,
+            IPdfGeneratorFactory pdfGeneratorFactory,
+            List<IVariableProvider> moduleVariableProviders)
         {
             _absolutePathService = absolutePathService ?? throw new ArgumentNullException(nameof(absolutePathService));
             _configFileLocator = configFileLocator ?? throw new ArgumentNullException(nameof(configFileLocator));
             _pdfGeneratorFactory = pdfGeneratorFactory ?? throw new ArgumentNullException(nameof(pdfGeneratorFactory));
-            _moduleVariableProviders = moduleVariableProviders ?? throw new ArgumentNullException(nameof(moduleVariableProviders));
+            _variableProviders = moduleVariableProviders ?? throw new ArgumentNullException(nameof(moduleVariableProviders));
         }
 
         public bool CanHandle(ICommandLineCommand command)
@@ -52,7 +47,7 @@
             if (inputFilename == null)
                 throw new Exception("Could not find input file");
 
-            var config = TryLoadConfig(createOptions.ConfigFile);
+            var config = TryLoadConfig(createOptions.ConfigFile, inputFilename);
 
             var variables = new Dictionary<string, string>();
             string outputFilename = null;
@@ -139,33 +134,13 @@
 
         private void Execute(CreateCommand command)
         {
-            var dateTimeFormatter = new ConfigurableDateTimeFormatter(
-                                                                      command.DefaultDateTimeFormat,
-                                                                      command.DefaultDateFormat,
-                                                                      command.DefaultTimeFormat);
-            var stringFormatter = new StringFormatter();
+            var defaultDateFormats = new Core.DefaultFormats(
+                                                        command.DefaultDateTimeFormat,
+                                                        command.DefaultDateFormat,
+                                                        command.DefaultTimeFormat);
+            var ctx = new Context(DateTime.Now, command.InputFile, defaultDateFormats);
 
-            var providers = new List<IVariableProvider>
-                                {
-                                    new DateTimeNowVariableProvider(dateTimeFormatter),
-                                    new DateTimeTimeVariableProvider(dateTimeFormatter),
-                                    new DateTimeDateVariableProvider(dateTimeFormatter),
-                                    new FilenameBaseVariableProvider(),
-                                    new FilenameVariableProvider(),
-                                    new FilePathVariableProvider(),
-                                    new FileExtensionVariableProvider(stringFormatter),
-                                    new PathSeparatorVariableProvider(),
-                                    new EmptyVariableProvider(),
-                                    new EnvironmentVariableVariableProvider(stringFormatter),
-                                    new GitVariableProviderComposition(dateTimeFormatter),
-                                    new GitVersionVariableProviderComposition(dateTimeFormatter),
-                                }
-                            .Concat(_moduleVariableProviders)
-                            .ToList();
-
-            var ctx = new Context(DateTime.Now, command.InputFile);
-
-            var visitor = new LanguageVisitor(providers, ctx);
+            var visitor = new LanguageVisitor(_variableProviders, ctx);
             var outputFilename = visitor.Visit(GetExpressionContext(command.OutputFile));
 
             var docVars = new Dictionary<string, string>();
@@ -193,7 +168,7 @@
             generator.Generate(command.InputFile, outputFilename, docVars);
         }
 
-        private Config TryLoadConfig(string inputConfigFilename)
+        private Config TryLoadConfig(string inputConfigFilename, string inputFilename)
         {
             Config config = null;
 
@@ -208,7 +183,7 @@
                 // find other config file and load.
                 foreach (var configFileLocator in _configFileLocator)
                 {
-                    foreach (var f in configFileLocator.Locate(inputConfigFilename))
+                    foreach (var f in configFileLocator.Locate(inputFilename))
                     {
                         config ??= TryLoadConfigFromFile(f);
                     }

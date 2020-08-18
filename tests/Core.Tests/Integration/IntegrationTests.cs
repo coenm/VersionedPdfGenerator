@@ -20,30 +20,27 @@
         private readonly ITestOutputHelper _output;
         private readonly List<IVariableProvider> _providers;
 
-        public IntegrationTests(ITestOutputHelper  output)
+        public IntegrationTests(ITestOutputHelper output)
         {
-            _output = output;
-            var dateTimeFormatter = new ConfigurableDateTimeFormatter(
-                                                                      "yyyy-M-d HH.mm.ss",
-                                                                      "yyyy-M-d",
-                                                                      "HH.mm.ss");
-            var stringFormatter = new StringFormatter();
+            _output = output ?? throw new ArgumentNullException(nameof(output));
 
             _providers = new List<IVariableProvider>
-                            {
-                                new DateTimeNowVariableProvider(dateTimeFormatter),
-                                new DateTimeTimeVariableProvider(dateTimeFormatter),
-                                new DateTimeDateVariableProvider(dateTimeFormatter),
-                                new FilenameBaseVariableProvider(),
-                                new FilenameVariableProvider(),
-                                new FilePathVariableProvider(),
-                                new FileExtensionVariableProvider(stringFormatter),
-                                new PathSeparatorVariableProvider(),
-                                new EmptyVariableProvider(),
-                                new EnvironmentVariableVariableProvider(stringFormatter),
-                                new GitVariableProviderComposition(dateTimeFormatter),
-                                new GitVersionVariableProviderComposition(dateTimeFormatter),
-                            };
+                             {
+                                 new DateTimeNowVariableProvider(DateTimeFormatter.Instance),
+                                 new DateTimeTimeVariableProvider(DateTimeFormatter.Instance),
+                                 new DateTimeDateVariableProvider(DateTimeFormatter.Instance),
+                                 new FilenameBaseVariableProvider(),
+                                 new FilenameVariableProvider(),
+                                 new FilePathVariableProvider(),
+                                 new FileExtensionVariableProvider(StringFormatter.Instance),
+                                 new PathSeparatorVariableProvider(),
+                                 new EmptyVariableProvider(),
+                                 new EnvironmentVariableVariableProvider(StringFormatter.Instance),
+                                 new GitVariableProviderComposition(DateTimeFormatter.Instance),
+                                 new GitVersionVariableProviderComposition(DateTimeFormatter.Instance),
+                             };
+            _providers.AddRange(new GitModule(DateTimeFormatter.Instance).CreateVariableProviders());
+            _providers.AddRange(new GitVersionModule(DateTimeFormatter.Instance).CreateVariableProviders());
         }
 
         [Theory]
@@ -79,9 +76,14 @@
         public void Parse(string input, string expectedOutput)
         {
             // arrange
+            var defaultDateFormats = new DefaultFormats(
+                                                        "yyyy-M-d HH.mm.ss",
+                                                        "yyyy-M-d",
+                                                        "HH.mm.ss");
             var ctx = new Context(
                                   new DateTime(2020, 12, 1, 15, 22, 23),
-                                  @"D:\aap\beer\cobra\File 234 Final.docx");
+                                  @"D:\aap\beer\cobra\File 234 Final.docx",
+                                  defaultDateFormats);
             var visitor = new LanguageVisitor(_providers, ctx, true);
 
             // act

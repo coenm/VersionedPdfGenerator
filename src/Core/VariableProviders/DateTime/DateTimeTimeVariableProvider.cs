@@ -22,7 +22,7 @@
 
         public string Provide(Context context, string key, string arg)
         {
-            return _formatter.FormatTime(context.Now);
+            return _formatter.FormatTime(context.Now, context, arg);
         }
 
         public IEnumerable<VariableDescription> Get()

@@ -23,9 +23,7 @@
 
         public string Provide(Context context, string key, string arg)
         {
-            if (string.IsNullOrWhiteSpace(arg))
-                return _formatter.FormatDateTime(context.Now);
-            return context.Now.ToString(arg, CultureInfo.CurrentUICulture);
+            return _formatter.FormatDateTime(context.Now, context, arg);
         }
 
         public IEnumerable<VariableDescription> Get()

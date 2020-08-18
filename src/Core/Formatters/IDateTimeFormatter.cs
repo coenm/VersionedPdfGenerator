@@ -4,10 +4,10 @@
 
     public interface IDateTimeFormatter
     {
-        string FormatDateTime(DateTime dateTime);
+        string FormatDateTime(DateTime dateTime, Context context , string format = null);
 
-        string FormatDate(DateTime dateTime);
+        string FormatDate(DateTime dateTime, Context context, string format = null);
 
-        string FormatTime(DateTime dateTime);
+        string FormatTime(DateTime dateTime, Context context, string format = null);
     }
 }

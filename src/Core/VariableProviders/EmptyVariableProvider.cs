@@ -7,9 +7,15 @@
     {
         private const string KEY = "empty";
 
-        public bool CanProvide(string key) => KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase);
+        public bool CanProvide(string key)
+        {
+            return KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase);
+        }
 
-        public string Provide(Context context, string key, string arg) => string.Empty;
+        public string Provide(Context context, string key, string arg)
+        {
+            return string.Empty;
+        }
 
         public IEnumerable<VariableDescription> Get()
         {

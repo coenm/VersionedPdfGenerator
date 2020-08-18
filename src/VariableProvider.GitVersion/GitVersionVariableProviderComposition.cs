@@ -17,7 +17,7 @@
         private readonly List<IGitVersionVariableProvider> _providers;
         private readonly List<IGitVersionVariableDescriptor> _gitVariableDescriptionProviders;
 
-        public GitVersionVariableProviderComposition(ConfigurableDateTimeFormatter dateTimeFormatter)
+        public GitVersionVariableProviderComposition(IDateTimeFormatter dateTimeFormatter)
         {
             if (dateTimeFormatter == null)
                 throw new ArgumentNullException(nameof(dateTimeFormatter));
@@ -61,10 +61,10 @@
             using (IRepository repo = new Repository(rootGitDir))
             {
                 var versionInfo = GitToolsFacade.GetVersion(repo);
-                var provider = _providers.FirstOrDefault(p => p.CanProvide(versionInfo.executeGitVersion, versionInfo.variables, gitVariableKey, arg));
+                var provider = _providers.FirstOrDefault(p => p.CanProvide(versionInfo.executeGitVersion, versionInfo.variables, context, gitVariableKey, arg));
                 return provider is null
                            ? string.Empty
-                           : provider.Provide(versionInfo.executeGitVersion, versionInfo.variables, gitVariableKey, arg);
+                           : provider.Provide(versionInfo.executeGitVersion, versionInfo.variables, context, gitVariableKey, arg);
             }
         }
 

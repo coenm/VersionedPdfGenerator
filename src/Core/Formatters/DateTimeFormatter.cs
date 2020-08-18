@@ -3,32 +3,58 @@
     using System;
     using System.Globalization;
 
-    public class ConfigurableDateTimeFormatter : IDateTimeFormatter
+    public class DateTimeFormatter : IDateTimeFormatter
     {
         private readonly string _formatDateTime;
         private readonly string _formatDate;
         private readonly string _formatTime;
 
-        public ConfigurableDateTimeFormatter(string formatDateTime, string formatDate, string formatTime)
+        private DateTimeFormatter()
         {
-            _formatDateTime = formatDateTime;
-            _formatDate = formatDate;
-            _formatTime = formatTime;
+            _formatDateTime = "yyyy-M-d HH.mm.ss";
+            _formatDate = "yyyy-M-d";
+            _formatTime = "HH.mm.ss";
         }
 
-        public string FormatDateTime(DateTime dateTime)
+        public static DateTimeFormatter Instance { get; } = new DateTimeFormatter();
+
+        public string FormatDateTime(DateTime dateTime, Context context, string format = null)
         {
-            return dateTime.ToString(_formatDateTime, CultureInfo.CurrentUICulture);
+            var f = _formatDateTime;
+
+            if (!string.IsNullOrWhiteSpace(context.DefaultDateFormats.DateTimeFormat))
+                f = context.DefaultDateFormats.DateTimeFormat;
+
+            if (!string.IsNullOrWhiteSpace(format))
+                f = format;
+
+            return dateTime.ToString(f, CultureInfo.CurrentUICulture);
         }
 
-        public string FormatDate(DateTime dateTime)
+        public string FormatDate(DateTime dateTime, Context context, string format = null)
         {
-            return dateTime.ToString(_formatDate, CultureInfo.CurrentUICulture);
+            var f = _formatDate;
+
+            if (!string.IsNullOrWhiteSpace(context.DefaultDateFormats.DateFormat))
+                f = context.DefaultDateFormats.DateFormat;
+
+            if (!string.IsNullOrWhiteSpace(format))
+                f = format;
+
+            return dateTime.ToString(f, CultureInfo.CurrentUICulture);
         }
 
-        public string FormatTime(DateTime dateTime)
+        public string FormatTime(DateTime dateTime, Context context, string format = null)
         {
-            return dateTime.ToString(_formatTime, CultureInfo.CurrentUICulture);
+            var f = _formatTime;
+
+            if (!string.IsNullOrWhiteSpace(context.DefaultDateFormats.TimeFormat))
+                f = context.DefaultDateFormats.TimeFormat;
+
+            if (!string.IsNullOrWhiteSpace(format))
+                f = format;
+
+            return dateTime.ToString(f, CultureInfo.CurrentUICulture);
         }
     }
 }

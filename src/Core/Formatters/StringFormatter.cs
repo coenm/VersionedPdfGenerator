@@ -4,6 +4,11 @@
 
     public class StringFormatter : IStringFormatter
     {
+        private StringFormatter()
+        {
+        }
+        public static StringFormatter Instance { get; }  = new StringFormatter();
+
         public string Format(string input, string arg)
         {
             if (string.IsNullOrWhiteSpace(input))

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    using Core;
     using LibGit2Sharp;
 
     internal class AuthorNameProvider : IGitVariableProvider, IGitVariableDescriptor
@@ -14,7 +15,7 @@
             return KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public string Provide(IRepository repo, string key, string arg)
+        public string Provide(IRepository repo, Context context, string key, string arg)
         {
             return repo?.Head?.Tip?.Author?.Name ?? string.Empty;
         }

@@ -7,6 +7,7 @@
     public class FilenameBaseVariableProvider : IVariableProvider, IVariableDescriptor
     {
         private const string KEY = "FilenameBase";
+
         public bool CanProvide(string key)
         {
             return KEY.Equals(key, StringComparison.CurrentCultureIgnoreCase);
