@@ -58,7 +58,7 @@ This application includes several document variable providers:
 - Host
 - etc. (date, input filename, ..)
 
-A list of all possible document variables is provided [here](DocumentVariables.md).
+A list of all possible document variables is provided [here](documentation/Variables.md).
 
 ### Methods
 
@@ -81,7 +81,7 @@ I.e. `{now:yyyy-MM-dd}` will result in `2020-04-12` and `{now:yyyyMMdd_HHmmss}` 
 
 Git is an opensource version control system. Every commit result in a new set of properties (i.e. sha, committer, commit date, branch etc.) which can be used using the GitVariableProvider.
 
-[GitVersion](https://gitversion.readthedocs.io/en/latest/) is a tool to create/calculate a version from the current git commit (in combination with the branches, tags, and its configuration). The GitVersionDocumentProvider provides all this information as variables.
+[GitVersion](https://gitversion.net/docs/) is a tool to create/calculate a version from the current git commit (in combination with the branches, tags, and its configuration). The GitVersionDocumentProvider provides all this information as variables.
 
 ## Extensibility
 
@@ -110,4 +110,4 @@ Why not use LaTeX, Markdown, LaTeX, HTML or something else for writing documents
 > Sometimes I use word documents, sometimes I don't.
 
 I don't like generating pdfs using Word Interop. Is there another way?
-> Yes there are multiple libraries capable of opening, updating doc variables and generating pdfs but they are not OS. Please open a pull request if you have a solution eliminating Word Interop.
+> Yes there are multiple libraries capable of opening, updating doc variables and generating pdfs but they require paid licenses. Please open a pull request if you have a solution eliminating Word Interop.
