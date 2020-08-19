@@ -3,22 +3,23 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Core.Formatters;
     using Core.VariableProviders;
 
     public class LanguageVisitor : LanguageBaseVisitor<string>
     {
+        private readonly List<IMethod> _methods;
         private readonly Context _context;
-        private readonly bool _debug;
         private readonly List<IVariableProvider> _providers;
 
-        public LanguageVisitor(List<IVariableProvider> providers, Context context, bool debug = false)
+        public LanguageVisitor(List<IVariableProvider> providers, List<IMethod> methods, Context context)
         {
             _context = context;
-            _debug = debug; // this is really not okay.
             _providers = providers.ToList();
+            _methods = methods.ToList();
         }
 
-        public string InnerVisitVariable(LanguageParser.VariableContext context)
+        public override string VisitVariable(LanguageParser.VariableContext context)
         {
             var key = context.KEY().GetText();
             string args = null;
@@ -34,19 +35,21 @@
             return selectedProvider.Provide(_context, key, args);
         }
 
-        public override string VisitVariable(LanguageParser.VariableContext context)
-        {
-            return _debug ? $"[{InnerVisitVariable(context)}]" : InnerVisitVariable(context);
-        }
-
-        private string InnerVisitText(LanguageParser.TextContext context)
+        public override string VisitText(LanguageParser.TextContext context)
         {
             return context.GetText();
         }
 
-        public override string VisitText(LanguageParser.TextContext context)
+        public override string VisitFunction(LanguageParser.FunctionContext context)
         {
-            return _debug ? $"[{InnerVisitText(context)}]" : InnerVisitText(context);
+            var method = context.KEY().GetText();
+            var arg = Visit(context.arg);
+
+            var m = _methods.FirstOrDefault(x => x.CanHandle(method));
+            if (m == null)
+                return method + arg;
+
+            return m.Handle(method, arg);
         }
 
         protected override string AggregateResult(string aggregate, string nextResult)

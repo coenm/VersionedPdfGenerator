@@ -3,17 +3,9 @@
     using System;
     using System.Collections.Generic;
 
-    using Core.Formatters;
-
     public class FileExtensionVariableProvider : IVariableProvider
     {
         private const string KEY = "FileExtension";
-        private readonly IStringFormatter _stringFormatterComposition;
-
-        public FileExtensionVariableProvider(IStringFormatter stringFormatterComposition)
-        {
-            _stringFormatterComposition = stringFormatterComposition;
-        }
 
         public bool CanProvide(string key)
         {
@@ -22,7 +14,7 @@
 
         public string Provide(Context context, string key, string arg)
         {
-            return _stringFormatterComposition.Format(context.FileInfo.Extension, arg);
+            return context.FileInfo.Extension;
         }
 
         public IEnumerable<VariableDescription> Get()

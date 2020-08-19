@@ -19,6 +19,7 @@
     {
         private readonly ITestOutputHelper _output;
         private readonly List<IVariableProvider> _providers;
+        private readonly List<IMethod> _methods;
 
         public IntegrationTests(ITestOutputHelper output)
         {
@@ -32,46 +33,54 @@
                                  new FilenameBaseVariableProvider(),
                                  new FilenameVariableProvider(),
                                  new FilePathVariableProvider(),
-                                 new FileExtensionVariableProvider(StringFormatter.Instance),
+                                 new FileExtensionVariableProvider(),
                                  new PathSeparatorVariableProvider(),
                                  new EmptyVariableProvider(),
-                                 new EnvironmentVariableVariableProvider(StringFormatter.Instance),
+                                 new EnvironmentVariableVariableProvider(),
                              };
 
             _providers.AddRange(new GitModule(DateTimeFormatter.Instance).CreateVariableProviders());
             _providers.AddRange(new GitVersionModule(DateTimeFormatter.Instance).CreateVariableProviders());
+
+            _methods = new List<IMethod>
+                           {
+                               new TrimEndStringMethod(),
+                               new TrimStartStringMethod(),
+                               new TrimStringMethod(),
+                               new LowerStringMethod(),
+                               new UpperStringMethod(),
+                               new UrlEncodeStringMethod(),
+                               new UrlDecodeStringMethod(),
+                           };
         }
 
         [Theory]
         [InlineData(
             "{filepath}{PathSeparator}{now}t a{time} aap {date} {env.OS} xx {empty}{fileextension} me  {filenamebase}.pdf ",
-            "[D:\\aap\\beer\\cobra][\\][2020-12-1 15.22.23][t a][15.22.23][ aap ][2020-12-1][ ][Windows_NT][ xx ][][.docx][ me  ][File 234 Final][.pdf ]")]
+            "D:\\aap\\beer\\cobra\\2020-12-1 15.22.23t a15.22.23 aap 2020-12-1 Windows_NT xx .docx me  File 234 Final.pdf ")]
 
         [InlineData(
             "{filepath}{Pathseparator}{now:yyyy}t a{time} aap {date} {env.OS} xx {empty}{fileextension} me  {filenamebase}.pdf ",
-            "[D:\\aap\\beer\\cobra][\\][2020][t a][15.22.23][ aap ][2020-12-1][ ][Windows_NT][ xx ][][.docx][ me  ][File 234 Final][.pdf ]")]
+            "D:\\aap\\beer\\cobra\\2020t a15.22.23 aap 2020-12-1 Windows_NT xx .docx me  File 234 Final.pdf ")]
 
         [InlineData(
-            "{filepath}{pathSeparator}{now:yyyy}t a{time} aap {date} {env.OS:lower} xx {empty}{fileextension:upper} me  {filenamebase}.pdf ",
-            "[D:\\aap\\beer\\cobra][\\][2020][t a][15.22.23][ aap ][2020-12-1][ ][windows_nt][ xx ][][.DOCX][ me  ][File 234 Final][.pdf ]")]
+            "{filepath}{pathSeparator}{now:yyyy}t a{time} aap {date} {Lower({env.OS})} xx {empty}{Upper({fileextension})} me  {filenamebase}.pdf ",
+            "D:\\aap\\beer\\cobra\\2020t a15.22.23 aap 2020-12-1 windows_nt xx .DOCX me  File 234 Final.pdf ")]
 
-        [InlineData(
-            "rubbish {gitversion.sha}{GitVersion.ShortShA}.pdf ",
-            "[rubbish ][4d9353f04138567556ed8c547bc10564fa80be67][4d9353f][.pdf ]")]
-
-        [InlineData(
-            "{filenamebase}_v{GitVersion.MajorMinorPatch}.pdf ",
-            "[File 234 Final][_v][0.1.0][.pdf ]")]
-
-        [InlineData("Fixed ",                "[Fixed ]")]
-        [InlineData(" Fixed",                "[ Fixed]")]
-        [InlineData("Fixed",                 "[Fixed]")]
-        [InlineData("F:i_x.e-d",             "[F:i_x.e-d]")]
-        [InlineData("{now:yyyy:MM _.-  dd}", "[2020:12 _.-  01]")]
-        [InlineData("{env.OS:lower}",        "[windows_nt]")]
-        [InlineData("{env.OS:upper}",        "[WINDOWS_NT]")]
-        [InlineData("{env.OS}",              "[Windows_NT]")]
-        [InlineData("http://www.google.com:8000", "[http://www.google.com:8000]")]
+        [InlineData("rubbish {gitversion.sha} {GitVersion.ShortShA}.pdf ",   "rubbish 4d9353f04138567556ed8c547bc10564fa80be67 4d9353f.pdf ")]
+        [InlineData("{filenamebase}_v{GitVersion.MajorMinorPatch}.pdf ",     "File 234 Final_v0.1.0.pdf ")]
+        [InlineData("Fixed ",                                                "Fixed ")]
+        [InlineData(" Fixed",                                                " Fixed")]
+        [InlineData("Fixed",                                                 "Fixed")]
+        [InlineData("F:i_x.e-d",                                             "F:i_x.e-d")]
+        [InlineData("{now:yyyy:MM _.-  dd}",                                 "2020:12 _.-  01")]
+        [InlineData("{Lower({env.OS})}",                                     "windows_nt")]
+        [InlineData("{Upper({env.OS})}",                                     "WINDOWS_NT")]
+        [InlineData("{env.OS}",                                              "Windows_NT")]
+        [InlineData("http://www.google.com:8000",                            "http://www.google.com:8000")]
+        [InlineData("{Upper(text)} x",                                       "TEXT x")]
+        [InlineData("{UrlEncode(http://www.google.com:8080/abc)} x",         "http%3a%2f%2fwww.google.com%3a8080%2fabc x")]
+        [InlineData("{Upper({filenamebase}.abc {Lower(TeSt)})} x",           "FILE 234 FINAL.ABC TEST x")]
         public void Parse(string input, string expectedOutput)
         {
             // arrange
@@ -83,7 +92,7 @@
                                   new DateTime(2020, 12, 1, 15, 22, 23),
                                   @"D:\aap\beer\cobra\File 234 Final.docx",
                                   defaultDateFormats);
-            var visitor = new LanguageVisitor(_providers, ctx, true);
+            var visitor = new LanguageVisitor(_providers, _methods, ctx);
 
             // act
             var context = GetExpressionContext(input);

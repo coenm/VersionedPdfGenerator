@@ -7,6 +7,7 @@
     using Antlr4.Runtime;
     using Core;
     using Core.Config;
+    using Core.Formatters;
     using Core.Parser;
     using Core.VariableProviders;
     using PdfGenerator.CommandLineOptions.Verbs;
@@ -20,17 +21,20 @@
         private readonly List<IDynamicConfigFileLocator> _configFileLocator;
         private readonly IPdfGeneratorFactory _pdfGeneratorFactory;
         private readonly List<IVariableProvider> _variableProviders;
+        private readonly List<IMethod> _methods;
 
         public OptionsCreateCommandHandler(
             IAbsolutePathService absolutePathService,
             List<IDynamicConfigFileLocator> configFileLocator,
             IPdfGeneratorFactory pdfGeneratorFactory,
-            List<IVariableProvider> moduleVariableProviders)
+            List<IVariableProvider> moduleVariableProviders,
+            List<IMethod> methods)
         {
             _absolutePathService = absolutePathService ?? throw new ArgumentNullException(nameof(absolutePathService));
             _configFileLocator = configFileLocator ?? throw new ArgumentNullException(nameof(configFileLocator));
             _pdfGeneratorFactory = pdfGeneratorFactory ?? throw new ArgumentNullException(nameof(pdfGeneratorFactory));
             _variableProviders = moduleVariableProviders ?? throw new ArgumentNullException(nameof(moduleVariableProviders));
+            _methods = methods ?? throw new ArgumentNullException(nameof(methods));
         }
 
         public bool CanHandle(ICommandLineCommand command)
@@ -140,7 +144,7 @@
                                                         command.DefaultTimeFormat);
             var ctx = new Context(DateTime.Now, command.InputFile, defaultDateFormats);
 
-            var visitor = new LanguageVisitor(_variableProviders, ctx);
+            var visitor = new LanguageVisitor(_variableProviders, _methods, ctx);
             var outputFilename = visitor.Visit(GetExpressionContext(command.OutputFile));
 
             var docVars = new Dictionary<string, string>();

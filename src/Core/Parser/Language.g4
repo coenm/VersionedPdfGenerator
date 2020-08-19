@@ -3,10 +3,13 @@
 /*------------------------------------------------------------------
  * PARSER RULES
  *------------------------------------------------------------------*/
-expression          : ( text | variable )*
+expression          : ( text | variable | function )*
                     ;
 
 variable            : '{' var=KEY (':' arg=text)? '}'
+                    ;
+
+function            : '{' func=KEY '(' arg=expression ')' '}'
                     ;
 
 text                : ( TEXT | KEY | ':' )+
@@ -23,8 +26,9 @@ fragment DOT        : '.' ;
 fragment MINUS      : '-' ;
 fragment SEMICOLUMN : ':' ;
 fragment SLASH      : '/' ;
+fragment PERCENT    : '%' ;
 
 KEY                 : LETTER(LETTER|DIGIT|UNDERSCORE|DOT|MINUS)+ ;
-TEXT                :       (LETTER|DIGIT|UNDERSCORE|DOT|MINUS|WS|SLASH)+;
+TEXT                :       (LETTER|DIGIT|UNDERSCORE|DOT|MINUS|WS|SLASH|PERCENT)+;
 NEWLINE             : ('\r'? '\n' | '\r') -> channel(HIDDEN) ;
 WHITESPACE          : (' ' | '\t' ) -> channel(HIDDEN) ;

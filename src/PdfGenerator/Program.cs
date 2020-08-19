@@ -85,16 +85,27 @@
                                         new FilenameBaseVariableProvider(),
                                         new FilenameVariableProvider(),
                                         new FilePathVariableProvider(),
-                                        new FileExtensionVariableProvider(StringFormatter.Instance),
+                                        new FileExtensionVariableProvider(),
                                         new PathSeparatorVariableProvider(),
                                         new EmptyVariableProvider(),
-                                        new EnvironmentVariableVariableProvider(StringFormatter.Instance),
+                                        new EnvironmentVariableVariableProvider(),
                                     };
                 providers.AddRange(moduleVariableProviders);
 
+                var methods = new List<IMethod>
+                                  {
+                                      new TrimEndStringMethod(),
+                                      new TrimStartStringMethod(),
+                                      new TrimStringMethod(),
+                                      new LowerStringMethod(),
+                                      new UpperStringMethod(),
+                                      new UrlEncodeStringMethod(),
+                                      new UrlDecodeStringMethod(),
+                                  };
+
                 var commandLineCommandHandlers = new List<ICommandLineCommandHandler>
                                                      {
-                                                         new OptionsCreateCommandHandler(absolutePathService, configFileLocators, pfdGeneratorFactory, providers),
+                                                         new OptionsCreateCommandHandler(absolutePathService, configFileLocators, pfdGeneratorFactory, providers, methods),
                                                          new OptionsGenerateConfigCommandHandler(),
                                                          new OptionsListAllVariablesCommandHandler(providers),
                                                      };
