@@ -29,6 +29,16 @@
 
         public string Provide(Context context, string key, string arg)
         {
+            return GetHostUrl();
+        }
+
+        public IEnumerable<VariableDescription> Get()
+        {
+            yield return new VariableDescription(KEY, $"The host url of the asp web server (ending with '/'). The current value is '{GetHostUrl()}'.");
+        }
+
+        private string GetHostUrl()
+        {
             var addresses = _server.Features.Get<IServerAddressesFeature>()?.Addresses?.ToArray();
 
             if (addresses == null || addresses.Length == 0)
@@ -38,11 +48,6 @@
             if (result.EndsWith("/"))
                 return result;
             return result + "/";
-        }
-
-        public IEnumerable<VariableDescription> Get()
-        {
-            yield break;
         }
     }
 }

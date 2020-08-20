@@ -15,8 +15,6 @@ DocVariables are some sort of placeholders in a Word document that can be replac
 
 ## Our Solution
 
-When your configuration contains an expression how to 'generate content' for the DOCVARIABLE 'MyVersion' it will update the DOCVARIABLE with this content when generating the pdf file.
-
 This project uses Word Interop to open the Word document, updates the pre-configured DOCVARIABLES, and generates a pdf file.
 The value of the Docvariables can be specified using simple expressions in a config file or can be set in the commandline. Using these expressions you can assign a the sha of a git commit, the branch name, the name of the committer etc to docvariables.
 
@@ -26,39 +24,28 @@ Our solution can also generate QR codes making it possible to quickly scan such 
 
 You can use static text, variables, and methods to assign values to DOCVARIABLES. Variables and methods are surrounded with curly brackets.
 
-Let's clarify the concept using an example.
+Let's clarify this concept using an example. The config file contains a section `DocVariables` which can be like this.
 
 ```yaml
 DocVariables:
- Project: 'ProjectX'
- # The evaluated DOCVARIABLE 'Project' contains static text 'ProjectX'.
-
- MyVersion: 'version: {git.sha}'
- # The evaluated DOCVARIABLE 'MyVersion' will be 'version: ac2708842a5de915223e0edc899177cad18b252b' when the sha of the git commit was 'ac2708842a5de915223e0edc899177cad18b252b'.
-
- Copyright: 'copyright 2010-{now:yyyy}'
- # {now:yyyy} will evaluate to the current datetime formatted as 'yyyy'. This line will add a DOCVARIABLE named 'Copyright' to the word document with the value 'copyright 2010-2020' (assuming it is still the year 2020).
-
- MyOperatingSystem: 'My OS is : {env.OS}'
- # All environment variables are accessable using the prefix 'env.'
-
- MyOperatingSystemUppercase: 'my os is {Upper({env.OS})}.'
- # Example using a method combined with a variable. The Upper() method will uppercase the content. I.e. after evaluation the docvariable will be 'my os is WINDOWS_NT' when the env.OS resulted in for instance 'Windows_NT'.
-
- RepoUrlQrCode: '{host}/qr/url/{UrlEncode(https://github.com/coenm/VersionedPdfGenerator/commit/{Git.Sha})}'
+ Project: 'ProjectX' #1
+ MyVersion: 'version: {git.sha}' #2
+ Copyright: 'copyright 2010-{now:yyyy}' #3
+ MyOperatingSystem: 'My OS is : {env.OS}' #4
+ MyOperatingSystemUppercase: 'my os is {Upper({env.OS})}.' #5
+ RepoUrlQrCode: '{host}/qr/url/{UrlEncode(https://github.com/coenm/VersionedPdfGenerator/commit/{Git.Sha})}' #6
 ```
 
-### Variable providers
+1. Adds docvariable named `Project` with static text `ProjectX` to the document.
+2. Assuming the current git commit sha is 'ac2708842a5de915223e0edc899177cad18b252b', the variable '`{git.sha}` will be evaluated and the final content of the document variable `MyVersion` will be `version: ac2708842a5de915223e0edc899177cad18b252b`.
+3. Variable `{now}` evaluates to the current date time and is formatted using the default formatting (this can also be configured in the config file). The formatting of the date time in `{now:yyyy}` will be overwritten for this specific variable. Therefore, the docvariable `Copyright` will be added to the document with `copyright 2010-2020` (assuming it is still 2020) as its value.
+4. Environment variables are accessable using the prefix `env.`. This config line will add a docvariable named `MyOperatingSystem` with the value `My OS is : Windows10` (assuming the environment variable `OS` is `Windows10`).
+5. Example using a method combined with a variable. The `Upper()` method will uppercase the content. I.e. after evaluation the docvariable will be `my os is WINDOWS_NT` when the `env.OS` returned `Windows_NT`.
+6. d
 
-This application includes several document variable providers:
+The variables supported at the moment can be found [here](documentation/Variables.md).
 
-- EnvironmentProvider. 
-- GitProvider
-- GitVersionProvider
-- Host
-- etc. (date, input filename, ..)
-
-A list of all possible document variables is provided [here](documentation/Variables.md).
+An example of a config file can be found [in the example directory](example/.VersionedPdfGenerator.yaml).
 
 ### Methods
 
@@ -76,6 +63,8 @@ The following methods are implemented:
 
 Using variables as `{now}` or `{Git.Committer.CommitDate}` (using c# DateTime instances) can be formatted to strings using the format feature of a variable. This can be specified using the semicolumn within the variable.
 I.e. `{now:yyyy-MM-dd}` will result in `2020-04-12` and `{now:yyyyMMdd_HHmmss}` results in `20200412_231218`.
+
+All date/time formatting options can be found at [docs.microsoft.com](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings).
 
 ## Git and GitVersion
 

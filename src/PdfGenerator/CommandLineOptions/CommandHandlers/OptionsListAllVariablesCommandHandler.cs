@@ -7,6 +7,7 @@
     using Core.VariableProviders;
     using PdfGenerator.CommandLineOptions.Verbs;
     using PdfGenerator.Commands;
+    using PdfGenerator.ListVariables;
 
     public class OptionsListAllVariablesCommandHandler : ICommandLineCommandHandler
     {
@@ -27,20 +28,31 @@
             if (!(command is ListAllVariableOptions generateConfigOptionsCommand))
                 throw new ArgumentNullException(nameof(command));
 
-            Execute(new ListVariablesCommand());
+            var listVariablesCommand = new ListVariablesCommand
+                                           {
+                                               UseMarkdown = generateConfigOptionsCommand.Format == OutputFormat.Markdown,
+                                           };
+
+            Execute(listVariablesCommand);
         }
 
         private void Execute(ListVariablesCommand command)
         {
-            var maxKeyLength = _variableProvider.SelectMany(x => x.Get()).Select(x => x.Key.Length).Max();
+            var variableInformation = new List<VariableInformation>();
 
             foreach (var provider in _variableProvider)
             {
-                foreach (var description in provider.Get())
-                {
-                    Console.WriteLine($" - {("{" + description.Key + "}").PadRight(maxKeyLength + 2)}  :  {description.Description}");
-                }
+                variableInformation.AddRange(provider.Get().Select(description => new VariableInformation(provider.GetType().Name, description.Key, description.Description)));
             }
+
+            IDocVariableRenderer renderer;
+            if (command.UseMarkdown)
+                renderer = new MarkdownRenderer();
+            else
+                renderer = new ConsoleRenderer();
+
+            var content = renderer.Render(variableInformation);
+            Console.WriteLine(content);
         }
     }
 }

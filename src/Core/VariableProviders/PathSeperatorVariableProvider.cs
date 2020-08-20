@@ -21,7 +21,7 @@
 
         public IEnumerable<VariableDescription> Get()
         {
-            yield return new VariableDescription(KEY, $"Path separator ({PathSeparator})");
+            yield return new VariableDescription(KEY, $"Path separator. Current value is '{PathSeparator}'.");
         }
     }
 }
