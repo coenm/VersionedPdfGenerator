@@ -24,20 +24,8 @@
         [HttpGet("text/{message}")]
         public IActionResult Text(string message)
         {
-            var qrGenerator = new QRCodeGenerator();
-            var qrCodeData = qrGenerator.CreateQrCode(message, QRCodeGenerator.ECCLevel.Q);
-            var qrCode = new QRCode(qrCodeData);
-            var qrCodeImage = qrCode.GetGraphic(20);
-
-            var qr1CodeImage = new byte[0];
-
-            using (var ms = new MemoryStream())
-            {
-                qrCodeImage.Save(ms, ImageFormat.Png);
-                qr1CodeImage = ms.ToArray();
-            }
-
-            return File(qr1CodeImage, "image/png");
+            var payload = HttpUtility.UrlDecode(message);
+            return CreateQrImage(payload);
         }
 
         [HttpGet("url/{url}")]
@@ -45,21 +33,19 @@
         {
             var generator = new PayloadGenerator.Url(HttpUtility.UrlDecode(url));
             var payload = generator.ToString();
+            return CreateQrImage(payload);
+        }
 
+        private IActionResult CreateQrImage(string payload)
+        {
             var qrGenerator = new QRCodeGenerator();
             var qrCodeData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
             var qrCode = new QRCode(qrCodeData);
             var qrCodeImage = qrCode.GetGraphic(20);
 
-            var qr1CodeImage = new byte[0];
-
-            using (var ms = new MemoryStream())
-            {
-                qrCodeImage.Save(ms, ImageFormat.Png);
-                qr1CodeImage = ms.ToArray();
-            }
-
-            return File(qr1CodeImage, "image/png");
+            using var ms = new MemoryStream();
+            qrCodeImage.Save(ms, ImageFormat.Png);
+            return File(ms.ToArray(), "image/png");
         }
     }
 }
