@@ -41,15 +41,15 @@ DocVariables:
 3. Variable `{now}` evaluates to the current date time and is formatted using the default formatting (this can also be configured in the config file). The formatting of the date time in `{now:yyyy}` will be overwritten for this specific variable. Therefore, the docvariable `Copyright` will be added to the document with `copyright 2010-2020` (assuming it is still 2020) as its value.
 4. Environment variables are accessable using the prefix `env.`. This config line will add a docvariable named `MyOperatingSystem` with the value `My OS is : Windows10` (assuming the environment variable `OS` is `Windows10`).
 5. Example using a method combined with a variable. The `Upper()` method will uppercase the content. I.e. after evaluation the docvariable will be `my os is WINDOWS_NT` when the `env.OS` returned `Windows_NT`.
-6. d
+6. `RepoUrlQrCode` results in an url generating a qr code. The `host` variable returns the url of the local webhost, the `/qr/url/` path is mapped to a method generating a qr code image with url `https://github.com/coenm/VersionedPdfGenerator/commit/{Git.Sha}`. This url needs to be url encoded (using the `UrlEncode` method).
 
-The variables supported at the moment can be found [here](documentation/Variables.md).
+All variables supported at this moment can be found [here](documentation/Variables.md).
 
 An example of a config file can be found [in the example directory](example/.VersionedPdfGenerator.yaml).
 
 ### Methods
 
-The following methods are implemented:
+The following methods are implemented. All methods require a single (string) argument.
 
 - Upper;
 - Lower;
@@ -80,11 +80,18 @@ You can also create a pull request with a better solution.
 
 ## QR code generation
 
-todo
+Images of QR codes can be inserted in the pdf using the `{ INCLUDEPICTURE "spefic url" }` fields in word. The host (and port) of the internal asp webhost are exposed using the `{host}` variable.
 
-### Security warning
+### API
 
-todo
+| type | path | result |
+| -- | -- | -- |
+| GET | `/qr/url/{url}` | image of qr code containing the url provided as `url`. Make sure the given ulr is encoded properly (ie, use the `EncodeUrl()` method). |
+| GET | `/qr/text/{message}`| image of qr code containing text `message`.  |
+
+### Security Warning
+
+Using Microsoft/Word Interop, a security warning will be popped when such `INCLUDEPICTURE` field is updated and an 'unknown' url is fetched. This is the reason we use the Word Interop with visible set to true.
 
 ## Examples
 
@@ -93,10 +100,7 @@ todo.
 ## FAQ
 
 Is Git the best match for word documents?
-> No, probably not, as git handles plain text documents ....
-
-Why not use LaTeX, Markdown, LaTeX, HTML or something else for writing documents? It is probably much easier to achieve the same.
-> Sometimes I use word documents, sometimes I don't.
+> No, probably not. Because `docx` files are binary it is more difficult to compare or merge these files. SharePoint, or other Microsoft solutions might provide better support for versioning etc.
 
 I don't like generating pdfs using Word Interop. Is there another way?
-> Yes there are multiple libraries capable of opening, updating doc variables and generating pdfs but they require paid licenses. Please open a pull request if you have a solution eliminating Word Interop.
+> There are multiple libraries capable of opening, updating doc variables and generating pdfs but they require paid licenses. Please open a pull request if you have a solution eliminating Word Interop.
