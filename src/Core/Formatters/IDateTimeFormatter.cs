@@ -4,7 +4,7 @@
 
     public interface IDateTimeFormatter
     {
-        string FormatDateTime(DateTime dateTime, Context context , string format = null);
+        string FormatDateTime(DateTime dateTime, Context context, string format = null);
 
         string FormatDate(DateTime dateTime, Context context, string format = null);
 

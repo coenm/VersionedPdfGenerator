@@ -11,8 +11,8 @@
 
     internal class WebHostVariableProvider : IVariableProvider
     {
-        private readonly IServer _server;
         private const string KEY = "Host";
+        private readonly IServer _server;
 
         internal WebHostVariableProvider(IServer server)
         {

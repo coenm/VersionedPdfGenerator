@@ -1,4 +1,4 @@
-namespace WebHost
+﻿namespace WebHost
 {
     using System;
     using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace WebHost
 
         public Task StartAsync()
         {
-            _  = _host.RunAsync();
+            _ = _host.RunAsync();
             return Task.CompletedTask;
         }
 
@@ -37,12 +37,6 @@ namespace WebHost
             _host?.Dispose();
         }
 
-        private static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            return Host.CreateDefaultBuilder(args)
-                       .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
-        }
-
         public IEnumerable<IVariableProvider> CreateVariableProviders()
         {
             if (_host == null)
@@ -50,6 +44,12 @@ namespace WebHost
 
             var server = _host.Services.GetService(typeof(IServer)) as IServer;
             yield return new WebHostVariableProvider(server);
+        }
+
+        private static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                       .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
         }
     }
 }

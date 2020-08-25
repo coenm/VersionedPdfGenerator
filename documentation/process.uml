@@ -1,0 +1,23 @@
+@startuml
+
+participant Application
+participant WordInterop
+
+-> Application : start
+
+Application -> Application : Create and init modules
+
+Application -> Application : Get all \ndocument variable \nvalues
+Application -> Application : Determine output filename
+
+Application -> WordInterop : GenratePdf (intput filename, output filename, doc variables)
+WordInterop -> WordInterop : Open (input filename)
+WordInterop -> WordInterop : Add (doc variables)
+WordInterop -> WordInterop : Update all fields
+WordInterop -> WordInterop : SavePdf (output filename)
+WordInterop -> Application : 
+
+WordInterop -> WordInterop : Close all modules
+
+<- Application : 
+@enduml

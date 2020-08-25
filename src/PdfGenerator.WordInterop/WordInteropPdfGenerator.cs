@@ -9,8 +9,7 @@
     using Microsoft.Office.Interop.Word;
 
     // https://dottutorials.net/programmatically-generate-word-files-using-interop-in-net-core/
-
-    public class WordInteropPdfGenerator : IPdfGenerator
+    internal class WordInteropPdfGenerator : IPdfGenerator
     {
         private readonly bool _showAnimation;
         private readonly bool _wordVisible;
@@ -39,6 +38,7 @@
             var readonlyMode = (object)true;
 
             // Use the dummy value as a placeholder for optional arguments
+#pragma warning disable SA1117 // Parameters should be on same line or separate lines
             Document doc = wordApplication.Documents.Open(
                                                           ref filename,
                                                           ref oMissing, ref readonlyMode, ref oMissing,
@@ -46,6 +46,7 @@
                                                           ref oMissing, ref oMissing, ref oMissing,
                                                           ref oMissing, ref oMissing, ref oMissing,
                                                           ref oMissing, ref oMissing, ref oMissing);
+#pragma warning restore SA1117 // Parameters should be on same line or separate lines
 
             // temp stupid workaround.
             Thread.Sleep(5000);
@@ -79,6 +80,7 @@
                 object outputFileName = outputPdfFilename;
                 object fileFormat = WdSaveFormat.wdFormatPDF;
 
+#pragma warning disable SA1117 // Parameters should be on same line or separate lines
                 // Save document into PDF Format
                 doc.SaveAs(
                            ref outputFileName, ref fileFormat,
@@ -87,6 +89,7 @@
                            ref oMissing, ref oMissing, ref oMissing,
                            ref oMissing, ref oMissing, ref oMissing,
                            ref oMissing, ref oMissing);
+#pragma warning restore SA1117 // Parameters should be on same line or separate lines
             }
 
             // Close the Word document, but leave the Word application open.

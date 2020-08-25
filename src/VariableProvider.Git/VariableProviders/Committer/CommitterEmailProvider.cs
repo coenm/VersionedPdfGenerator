@@ -6,7 +6,7 @@
     using Core;
     using LibGit2Sharp;
 
-    internal class CommitterEmailProvider : IGitVariableProvider, IGitVariableDescriptor
+    internal class CommitterEmailProvider : IGitVariableProvider
     {
         private const string KEY = "Committer.Email";
 

@@ -67,10 +67,7 @@
                     var key = item.Key;
                     var value = item.Value;
 
-                    if (variables.ContainsKey(key))
-                        variables[key] = value;
-                    else
-                        variables.Add(key, value);
+                    variables[key] = value;
                 }
 
                 if (string.IsNullOrWhiteSpace(config.OutputPath))
@@ -106,11 +103,7 @@
 
                 var key = split[0];
                 var value = split[1];
-
-                if (variables.ContainsKey(key))
-                    variables[key] = value;
-                else
-                    variables.Add(key, value);
+                variables[key] = value;
             }
 
             if (!string.IsNullOrWhiteSpace(createOptions.OutputFilename))
@@ -122,7 +115,7 @@
             if (createOptions.Force)
                 forceOutput = createOptions.Force;
 
-            var createCommand =  new CreateCommand
+            var createCommand = new CreateCommand
                 {
                     InputFile = inputFilename,
                     OutputFile = outputFilename,

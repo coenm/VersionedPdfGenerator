@@ -6,7 +6,7 @@
     using Core;
     using LibGit2Sharp;
 
-    internal class CommitterNameProvider : IGitVariableProvider, IGitVariableDescriptor
+    internal class CommitterNameProvider : IGitVariableProvider
     {
         private const string KEY = "Committer.Name";
 

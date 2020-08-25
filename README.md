@@ -66,6 +66,10 @@ I.e. `{now:yyyy-MM-dd}` will result in `2020-04-12` and `{now:yyyyMMdd_HHmmss}` 
 
 All date/time formatting options can be found at [docs.microsoft.com](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings).
 
+## Configuration
+
+todo
+
 ## Git and GitVersion
 
 Git is an opensource version control system. Every commit result in a new set of properties (i.e. sha, committer, commit date, branch etc.) which can be used using the GitVariableProvider.
@@ -91,7 +95,7 @@ Images of QR codes can be inserted in the pdf using the `{ INCLUDEPICTURE "spefi
 
 ### Security Warning
 
-Using Microsoft/Word Interop, a security warning will be popped when such `INCLUDEPICTURE` field is updated and an 'unknown' url is fetched. This is the reason we use the Word Interop with visible set to true.
+Using Microsoft/Word Interop, a security warning will be popped when such `INCLUDEPICTURE` field is updated and an 'unknown' url is fetched. This is the reason we use the Word Interop with visibility set to true.
 
 ## Examples
 

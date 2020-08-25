@@ -6,7 +6,7 @@
     using Core;
     using LibGit2Sharp;
 
-    internal class RootDirectoryProvider : IGitVariableProvider, IGitVariableDescriptor
+    internal class RootDirectoryProvider : IGitVariableProvider
     {
         private const string KEY = "RootDir";
 

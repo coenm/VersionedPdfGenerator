@@ -19,7 +19,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VariableProvider.GitVersion
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebHost", "src\WebHost\WebHost.csproj", "{13157797-6A6C-46BE-BDBF-35F2B782C051}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebHost.Tests", "tests\WebHost.Tests\WebHost.Tests.csproj", "{2681F881-3821-4D86-A3FA-DB6F0B4F09F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebHost.Tests", "tests\WebHost.Tests\WebHost.Tests.csproj", "{2681F881-3821-4D86-A3FA-DB6F0B4F09F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F3EE59DF-4E4A-4F05-853D-FA6389B21DFD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

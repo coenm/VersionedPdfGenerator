@@ -2,16 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <IncludeSymbolsInSingleFile>true</IncludeSymbolsInSingleFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="GitVersion.Core" Version="5.3.7" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
+    <PackageReference Include="Microsoft.Extensions.Options"/>
   </ItemGroup>
 
   <ItemGroup>

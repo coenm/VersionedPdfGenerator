@@ -108,7 +108,7 @@
             var lexer = new LanguageLexer(inputStream);
             var commonTokenStream = new CommonTokenStream(lexer);
             var parser = new LanguageParser(commonTokenStream);
-            var result =  parser.expression();
+            var result = parser.expression();
 
             _output.WriteLine($"input: '{input}'");
             _output.WriteLine(string.Empty);

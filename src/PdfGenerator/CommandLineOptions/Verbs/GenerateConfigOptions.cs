@@ -2,7 +2,7 @@
 {
     using CommandLine;
 
-    [Verb("generate-config") ]
+    [Verb("generate-config")]
     public class GenerateConfigOptions : ICommandLineCommand
     {
         [Value(0, Required = true, HelpText = "Output filename")]

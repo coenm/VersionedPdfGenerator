@@ -7,7 +7,7 @@
     public class PathSeparatorVariableProvider : IVariableProvider
     {
         private const string KEY = "PathSeparator";
-        private static readonly string PathSeparator = new string(Path.DirectorySeparatorChar, 1);
+        private static readonly string _pathSeparator = new string(Path.DirectorySeparatorChar, 1);
 
         public bool CanProvide(string key)
         {
@@ -16,12 +16,12 @@
 
         public string Provide(Context context, string key, string arg)
         {
-            return PathSeparator;
+            return _pathSeparator;
         }
 
         public IEnumerable<VariableDescription> Get()
         {
-            yield return new VariableDescription(KEY, $"Path separator. Current value is '{PathSeparator}'.");
+            yield return new VariableDescription(KEY, $"Path separator. Current value is '{_pathSeparator}'.");
         }
     }
 }

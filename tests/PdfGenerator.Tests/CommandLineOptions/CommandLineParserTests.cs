@@ -26,7 +26,7 @@
                                "Age=1",
                                "SHA={gitversion.sha}",
                                "Desc=this is some text",
-                               "GitVersion=v.{GitVersion.FullSemVer} -- Last commit {gitVersion.CommitDate}"
+                               "GitVersion=v.{GitVersion.FullSemVer} -- Last commit {gitVersion.CommitDate}",
                            };
 
             // act
@@ -50,8 +50,6 @@
                                           Filename = "C:\\Users\\coenm\\Documents\\MyDocument.docx",
                                       });
         }
-
-
 
         [Fact]
         public void Parse_ShouldReturnGenerateConfigOptions_WhenInputIsCorrect()

@@ -6,6 +6,4 @@
     {
         IEnumerable<string> Locate(string inputFilename);
     }
-
-
 }

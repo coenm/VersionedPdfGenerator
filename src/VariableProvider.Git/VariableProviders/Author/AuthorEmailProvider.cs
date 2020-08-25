@@ -6,7 +6,7 @@
     using Core;
     using LibGit2Sharp;
 
-    internal class AuthorEmailProvider : IGitVariableProvider, IGitVariableDescriptor
+    internal class AuthorEmailProvider : IGitVariableProvider
     {
         private const string KEY = "Author.Email";
 

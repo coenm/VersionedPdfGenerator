@@ -6,7 +6,7 @@
     using Core;
     using LibGit2Sharp;
 
-    internal class MessageShortProvider : IGitVariableProvider, IGitVariableDescriptor
+    internal class MessageShortProvider : IGitVariableProvider
     {
         private const string KEY = "MessageShort";
 

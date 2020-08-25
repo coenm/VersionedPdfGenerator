@@ -17,7 +17,6 @@
         private const string PREFIX = "Git.";
 
         private readonly List<IGitVariableProvider> _gitProviders;
-        private readonly List<IGitVariableDescriptor> _gitVariableDescriptionProviders;
 
         public GitVariableProviderComposition(IDateTimeFormatter dateTimeFormatter)
         {
@@ -37,11 +36,6 @@
                                     new CommitterWhenProvider(dateTimeFormatter),
                                     new RootDirectoryProvider(),
                                 };
-
-            _gitVariableDescriptionProviders = _gitProviders
-                                               .Select(x => x as IGitVariableDescriptor)
-                                               .Where(x => x != null)
-                                               .ToList();
         }
 
         public bool CanProvide(string key)
@@ -80,7 +74,7 @@
 
         public IEnumerable<VariableDescription> Get()
         {
-            foreach (var provider in _gitVariableDescriptionProviders)
+            foreach (var provider in _gitProviders)
             {
                 foreach (var description in provider.Get())
                 {

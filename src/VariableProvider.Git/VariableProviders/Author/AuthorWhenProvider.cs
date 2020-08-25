@@ -7,16 +7,15 @@
     using Core.Formatters;
     using LibGit2Sharp;
 
-    internal class AuthorWhenProvider : IGitVariableProvider, IGitVariableDescriptor
+    internal class AuthorWhenProvider : IGitVariableProvider
     {
+        private const string KEY = "Author.CommitDate";
         private readonly IDateTimeFormatter _dateTimeFormatter;
 
         public AuthorWhenProvider(IDateTimeFormatter dateTimeFormatter)
         {
             _dateTimeFormatter = dateTimeFormatter ?? throw new ArgumentNullException(nameof(dateTimeFormatter));
         }
-
-        private const string KEY = "Author.CommitDate";
 
         public bool CanProvide(string key)
         {
@@ -26,7 +25,7 @@
         public string Provide(IRepository repo, Context context, string key, string arg)
         {
             var dt = repo?.Head?.Tip?.Author?.When.DateTime;
-            if (dt.HasValue == false)
+            if (!dt.HasValue)
                 return string.Empty;
 
             return _dateTimeFormatter.FormatDateTime(dt.Value, context, arg);

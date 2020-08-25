@@ -16,7 +16,7 @@
         [Option('c', "config", Required = false, Default = null, HelpText = "Specify a config file.")]
         public string ConfigFile { get; set; }
 
-        [Option('f', "force", Required =  false, Default = false, HelpText = "Overwrite output when already exists, cancel otherwise.")]
+        [Option('f', "force", Required = false, Default = false, HelpText = "Overwrite output when already exists, cancel otherwise.")]
         public bool Force { get; set; }
 
         [Option("vars", Required = false, HelpText = "Additional DocVars. Format is Key=Value Key=Value Key=Value ")]

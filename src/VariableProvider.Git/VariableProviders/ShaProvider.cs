@@ -6,7 +6,7 @@
     using Core;
     using LibGit2Sharp;
 
-    internal class ShaProvider : IGitVariableProvider, IGitVariableDescriptor
+    internal class ShaProvider : IGitVariableProvider
     {
         private const string KEY = "Sha";
 

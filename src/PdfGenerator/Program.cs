@@ -30,7 +30,7 @@
                                     ".VersionedPdfGenerator.yaml",
                                     ".VersionedPdfGenerator.yml",
                                     "VersionedPdfGenerator.yaml",
-                                    "VersionedPdfGenerator.yml"
+                                    "VersionedPdfGenerator.yml",
                                 };
 
             var configFileLocators = new List<IDynamicConfigFileLocator>
@@ -53,10 +53,10 @@
             try
             {
                 foreach (var module in enabledModules)
-                    await module.InitializeAsync();
+                    await module.InitializeAsync().ConfigureAwait(false);
 
                 foreach (var module in enabledModules)
-                    await module.StartAsync();
+                    await module.StartAsync().ConfigureAwait(false);
 
                 ICommandLineCommand command = null;
 
@@ -126,7 +126,7 @@
             finally
             {
                 foreach (var module in enabledModules)
-                    await module.StopAsync();
+                    await module.StopAsync().ConfigureAwait(false);
             }
 
             Console.WriteLine("Press enter to exit.");

@@ -9,16 +9,17 @@
         {
             var sb = new StringBuilder();
 
-            // sb.AppendLine("| Provider | Variable | Description |");
-            // sb.AppendLine("| --- | --- | --- |");
-
             sb.AppendLine("| Variable | Description |");
             sb.AppendLine("| --- | --- |");
 
             foreach (var item in information)
             {
-                sb.AppendLine($"| {TransformString(item.VariableName)} | {TransformString(item.VariableDescription)} |");
-                // sb.AppendLine($"| {item.ProviderName} | {item.VariableName} | {item.VariableDescription} |");
+                // sb.AppendLine($"| {TransformString(item.VariableName)} | {TransformString(item.VariableDescription)} |");
+                sb.Append("| ");
+                sb.Append(TransformString(item.VariableName));
+                sb.Append(" | ");
+                sb.Append(TransformString(item.VariableDescription));
+                sb.AppendLine(" |");
             }
 
             return sb.ToString();
@@ -34,7 +35,7 @@
             // also escape backslash.
             return input
                    .Replace("<name>", "*name*")
-                   .Replace("\\","\\\\");
+                   .Replace("\\", "\\\\");
         }
     }
 }

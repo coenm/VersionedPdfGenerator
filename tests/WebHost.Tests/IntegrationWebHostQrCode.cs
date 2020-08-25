@@ -1,4 +1,4 @@
-namespace WebHost.Tests
+﻿namespace WebHost.Tests
 {
     using System.Threading.Tasks;
     using System.Web;
@@ -38,6 +38,7 @@ namespace WebHost.Tests
             // assert
             response.IsSuccessStatusCode.Should().BeTrue();
             bytes.Length.Should().Be(21013);
+
             // should be better to verify image.
         }
 
@@ -54,12 +55,8 @@ namespace WebHost.Tests
             // assert
             response.IsSuccessStatusCode.Should().BeTrue();
             bytes.Length.Should().Be(21013);
-            // should be better to verify image.
-        }
 
-        private static string EncodeUrl(string url)
-        {
-            return HttpUtility.UrlEncode(url);
+            // should be better to verify image.
         }
 
         public async Task InitializeAsync()
@@ -71,6 +68,11 @@ namespace WebHost.Tests
         public Task DisposeAsync()
         {
             return Task.CompletedTask;
+        }
+
+        private static string EncodeUrl(string url)
+        {
+            return HttpUtility.UrlEncode(url);
         }
     }
 }
