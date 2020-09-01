@@ -1,0 +1,7 @@
+{
+  Width: 660,
+  Height: 660,
+  HorizontalResolution: 3779.0,
+  VerticalResolution: 3779.0,
+  ResolutionUnits: 'PixelsPerMeter'
+}

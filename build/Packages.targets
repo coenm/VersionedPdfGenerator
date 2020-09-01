@@ -35,7 +35,8 @@
     <PackageReference Update="FakeItEasy.Analyzer.CSharp" Version="6.0.0" IsImplicitlyDefined="true"/>
     <PackageReference Update="FluentAssertions" Version="5.10.3" IsImplicitlyDefined="true"/>
     <PackageReference Update="FluentAssertions.Analyzers" Version="0.11.4" IsImplicitlyDefined="true"/>
-    <PackageReference Update="Verify.Xunit" Version="2.1.2" IsImplicitlyDefined="true"/>
+    <PackageReference Update="Verify.Xunit" Version="6.10.6" IsImplicitlyDefined="true"/>
+    <PackageReference Update="Verify.ImageSharp" Version="3.2.0" IsImplicitlyDefined="true"/>
 
     <!--Test coverage -->
     <PackageReference Update="coverlet.msbuild" Version="2.8.1" IsImplicitlyDefined="true"/>
