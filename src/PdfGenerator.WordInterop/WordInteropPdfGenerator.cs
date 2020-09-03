@@ -81,6 +81,7 @@
                 object fileFormat = WdSaveFormat.wdFormatPDF;
 
 #pragma warning disable SA1117 // Parameters should be on same line or separate lines
+
                 // Save document into PDF Format
                 doc.SaveAs(
                            ref outputFileName, ref fileFormat,

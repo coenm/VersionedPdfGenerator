@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersion.Core" Version="5.3.7" />
+    <PackageReference Include="GitVersion.Core" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
     <PackageReference Include="Microsoft.Extensions.Options"/>
   </ItemGroup>
