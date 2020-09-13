@@ -18,12 +18,15 @@
     public class IntegrationWebHostQrCode : IAsyncLifetime
     {
         private readonly IHostBuilder _hostBuilder;
-        private readonly VerifySettings _settings;
+        private static readonly VerifySettings _settings;
         private IHost _host;
 
         static IntegrationWebHostQrCode()
         {
             VerifyImageSharp.Initialize();
+
+            _settings = new VerifySettings();
+            _settings.UseExtension("png");
         }
 
         public IntegrationWebHostQrCode()
@@ -35,9 +38,6 @@
                                       webHost.UseTestServer();
                                       webHost.UseStartup<Startup>();
                                   });
-
-            _settings = new VerifySettings();
-            _settings.UseExtension("png");
         }
 
         [Fact]
