@@ -94,9 +94,10 @@ Line 3";
             _host = await _hostBuilder.StartAsync();
         }
 
-        public Task DisposeAsync()
+        public async Task DisposeAsync()
         {
-            return Task.CompletedTask;
+            await _host.StopAsync();
+            _host.Dispose();
         }
 
         private static string EncodeUrl(string url)
