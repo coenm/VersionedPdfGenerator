@@ -354,3 +354,6 @@ example/*.pdf
 *.lnk
 Microsoft.Office.Interop.Word.dll
 *.diff
+
+
+*.received.*
