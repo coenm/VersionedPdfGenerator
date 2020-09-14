@@ -1,0 +1,11 @@
+OutputPath: '{filepath}{PathSeparator}'
+OutputFilename: '{now:yyyyMMddHHmmss}_{filenamebase}.pdf'
+OverwriteOutputWhenExist: true
+DefaultFormats:
+  DateTimeFormat: yyyy-MM-dd HH.mm.ss
+  DateFormat: yyyy-MM-dd
+  TimeFormat: HH.mm.ss
+DocVariables:
+  RepoUrlQrCode: '{host}/qr/url/{UrlEncode(https://github.com/coenm/VersionedPdfGenerator/commit/{Git.Sha})}'
+  EmailQrCode: '{host}/qr/mail/{UrlEncode({Git.Author.Email})}/{UrlEncode(Feedback {Git.Sha})}/Hi {UrlEncode({Git.Author.Name})}'
+  TextQrCode: '{host}/qr/text/{UrlEncode(Hi there this is free text)}'

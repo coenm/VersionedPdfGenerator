@@ -28,6 +28,7 @@
         }
 
         [HttpGet("mail/{to}/{subject}/{message}")]
+        [HttpGet("email/{to}/{subject}/{message}")]
         public IActionResult QrUlr(string to, string subject, string message)
         {
             var generator = new PayloadGenerator.Mail(Decode(to), Decode(subject), Decode(message));

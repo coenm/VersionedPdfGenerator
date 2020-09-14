@@ -17,8 +17,8 @@
     [UsesVerify]
     public class IntegrationWebHostQrCode : IAsyncLifetime
     {
-        private readonly IHostBuilder _hostBuilder;
         private static readonly VerifySettings _settings;
+        private readonly IHostBuilder _hostBuilder;
         private IHost _host;
 
         static IntegrationWebHostQrCode()

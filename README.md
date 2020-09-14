@@ -92,6 +92,7 @@ Images of QR codes can be inserted in the pdf using the `{ INCLUDEPICTURE "spefi
 | -- | -- | -- |
 | GET | `/qr/url/{url}` | image of qr code containing the url provided as `url`. Make sure the given ulr is encoded properly (ie, use the `EncodeUrl()` method). |
 | GET | `/qr/text/{message}`| image of qr code containing text `message`.  |
+| GET | `/qr/mail/{to}/{subject}/{message}`| image of qr code to compose an email with predefined values. Make sure you encode the variables.  |
 
 ### Security Warning
 
