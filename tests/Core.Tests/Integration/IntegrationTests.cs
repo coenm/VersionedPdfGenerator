@@ -78,6 +78,7 @@
         [InlineData("{Upper({env.OS})}",                                     "WINDOWS_NT")]
         [InlineData("{env.OS}",                                              "Windows_NT")]
         [InlineData("http://www.google.com:8000",                            "http://www.google.com:8000")]
+        [InlineData("fake@github.com",                                       "fake@github.com")]
         [InlineData("{Upper(text)} x",                                       "TEXT x")]
         [InlineData("{UrlEncode(http://www.google.com:8080/abc)} x",         "http%3a%2f%2fwww.google.com%3a8080%2fabc x")]
         [InlineData("{Upper({filenamebase}.abc {Lower(TeSt)})} x",           "FILE 234 FINAL.ABC TEST x")]

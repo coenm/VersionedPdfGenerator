@@ -27,8 +27,9 @@ fragment MINUS      : '-' ;
 fragment SEMICOLUMN : ':' ;
 fragment SLASH      : '/' ;
 fragment PERCENT    : '%' ;
+fragment ATSIGN     : '@' ;
 
 KEY                 : LETTER(LETTER|DIGIT|UNDERSCORE|DOT|MINUS)+ ;
-TEXT                :       (LETTER|DIGIT|UNDERSCORE|DOT|MINUS|WS|SLASH|PERCENT)+;
+TEXT                :       (LETTER|DIGIT|UNDERSCORE|DOT|MINUS|WS|SLASH|PERCENT|ATSIGN)+;
 NEWLINE             : ('\r'? '\n' | '\r') -> channel(HIDDEN) ;
 WHITESPACE          : (' ' | '\t' ) -> channel(HIDDEN) ;
