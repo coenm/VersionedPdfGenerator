@@ -88,6 +88,28 @@ Line 3";
             await AssertQrCodeImage(response);
         }
 
+        [Fact]
+        public async Task MailShouldReturnSameAsEmail()
+        {
+            // arrange
+            const string MESSAGE = @"Here is some feedback
+Line 2
+Line 3";
+            using var client = _host.GetTestClient();
+
+            // act
+            var response1 = await client.GetAsync($"/qr/mail/{EncodeUrl("me@h0st.com")}/{EncodeUrl("Feedback on version abc")}/{EncodeUrl(MESSAGE)}");
+            var response2 = await client.GetAsync($"/qr/email/{EncodeUrl("me@h0st.com")}/{EncodeUrl("Feedback on version abc")}/{EncodeUrl(MESSAGE)}");
+
+            var bytes1 = await response1.Content.ReadAsByteArrayAsync();
+            var bytes2 = await response2.Content.ReadAsByteArrayAsync();
+
+            // assert
+            response1.IsSuccessStatusCode.Should().BeTrue();
+            response2.IsSuccessStatusCode.Should().BeTrue();
+            bytes1.Should().BeEquivalentTo(bytes2);
+        }
+
         public async Task InitializeAsync()
         {
             // Create and start up the host
@@ -105,7 +127,7 @@ Line 3";
             return HttpUtility.UrlEncode(url);
         }
 
-        private async Task AssertQrCodeImage(HttpResponseMessage response)
+        private static async Task AssertQrCodeImage(HttpResponseMessage response)
         {
             var bytes = await response.Content.ReadAsByteArrayAsync();
             using var img = Image.Load(bytes);
