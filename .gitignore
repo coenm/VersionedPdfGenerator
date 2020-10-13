@@ -348,3 +348,13 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+src/PdfGenerator/costura32/
+src/PdfGenerator/costura64/
+example/*.pdf
+example/**/*.pdf
+*.lnk
+Microsoft.Office.Interop.Word.dll
+*.diff
+
+
+*.received.*

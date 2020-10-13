@@ -1,0 +1,41 @@
+{
+  "profiles": {
+    "PdfGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "create -i \"D:\\a b c\\d.pdf\" -n --vars version=1 author=Coen sub=\"Rik van den Munckhof\""
+    },
+    "test1": {
+      "commandName": "Project",
+      "commandLineArgs": "create \"C:\\Users\\c.van.den.munckhof\\Documents\\Coen\\Git\\curriculum-vitae\\Coen van den Munckhof.docx\" -c \"D:\\VersionedPdfGenerator.yaml11\"  --vars Author=Coen Age=1 SHA={gitversion.sha} \"Desc=this is some text\" \"GitVersion=v.{GitVersion.FullSemVer} -- Last commit {gitVersion.CommitDate}\" \"GitVersionNugetVersionV2={GitVersion.nugetVersionV2} {GitVersion.ShortSha} Tje\""
+    },
+    "generate-config": {
+      "commandName": "Project",
+      "commandLineArgs": "generate-config \"D:\\VersionedPdfGenerator.yaml\""
+    },
+    "empty": {
+      "commandName": "Project"
+    },
+    "create-relative": {
+      "commandName": "Project",
+      "commandLineArgs": "create \"..\\Git\\curriculum-vitae\\Coen van den Munckhof.docx\" -c \"D:\\VersionedPdfGenerator.yaml11\"  --vars Author=Coen Age=1 SHA={gitversion.sha} \"Desc=this is some text\" \"GitVersion=v.{GitVersion.FullSemVer} -- Last commit {gitVersion.CommitDate}\" \"GitVersionNugetVersionV2={GitVersion.nugetVersionV2} {GitVersion.ShortSha} Tje\"",
+      "workingDirectory": "C:\\Users\\c.van.den.munckhof\\Documents\\Coen\\Git"
+    },
+    "list-vars": {
+      "commandName": "Project",
+      "commandLineArgs": "list-vars"
+    },
+    "create relative - now.docx": {
+      "commandName": "Project",
+      "commandLineArgs": "create \"VersionedPdfGenerator\\example\\example document.docx\" -c \"D:\\VersionedPdfGenerator.yaml11\"  --vars \"Host=http://localhost:5000/\" Author=Coen Age=1 SHA={gitversion.sha} \"Desc=this is some text\" \"GitVersion=v.{GitVersion.FullSemVer} -- Last commit {gitVersion.CommitDate}\" \"GitVersionNugetVersionV2={GitVersion.nugetVersionV2} {GitVersion.ShortSha} Tje\"",
+      "workingDirectory": "C:\\Users\\c.van.den.munckhof\\Documents\\Coen\\Git"
+    },
+    "file only": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\c.van.den.munckhof\\Documents\\Coen\\Git\\VersionedPdfGenerator\\example\\example document.docx\""
+    },
+    "list vars markdown": {
+      "commandName": "Project",
+      "commandLineArgs": "list-vars -f Markdown"
+    }
+  }
+}
