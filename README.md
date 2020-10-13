@@ -109,3 +109,11 @@ Is Git the best match for word documents?
 
 I don't like generating pdfs using Word Interop. Is there another way?
 > There are multiple libraries capable of opening, updating doc variables and generating pdfs but they require paid licenses. Please open a pull request if you have a solution eliminating Word Interop.
+
+## Release
+
+Release is created using
+
+```bash
+dotnet publish src\PdfGenerator\PdfGenerator.csproj -c Release
+```
