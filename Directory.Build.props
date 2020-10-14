@@ -3,7 +3,6 @@
   <PropertyGroup>
     <RestoreSources>
       https://api.nuget.org/v3/index.json;
-      https://nuget.devexpress.com/GoFpbFP9YVNRtd1GIIs9Lw5Lzcx1LaHpPAbIc21ZoTHARlTaiU/api
     </RestoreSources>
   </PropertyGroup>
 </Project>
